@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlogMind AI v5 — ناشر بلوجر | OpenRouter مجاني</title>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#050c1a; --ink2:#0d1f3c; --ink3:#162d52;
+  --surf:#0f1e38; --surf2:#152644; --surf3:#1c3258;
+  --line:rgba(255,255,255,0.07); --line2:rgba(255,255,255,0.12);
+  --cyan:#00e5ff; --cyan2:#00b8d4; --green:#00e676;
+  --amber:#ffd740; --rose:#ff4081; --purple:#b388ff;
+  --text:#e8f4fd; --text2:#7ea8d0; --text3:#3d6488;
+  --mono:'Space Mono',monospace; --sans:'Readex Pro',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--ink);color:var(--text);min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(ellipse 80% 50% at 0% 0%,rgba(0,229,255,.06) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 60% at 100% 100%,rgba(0,230,118,.05) 0%,transparent 60%);}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink2);}
+::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:2px;}
+
+/* ===== NAV ===== */
+nav{position:sticky;top:0;z-index:200;background:rgba(5,12,26,.93);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line2);padding:0 28px;height:58px;
+  display:flex;align-items:center;justify-content:space-between;}
+.nav-brand{display:flex;align-items:center;gap:10px;}
+.nav-icon{width:32px;height:32px;background:var(--cyan);border-radius:8px;display:flex;
+  align-items:center;justify-content:center;font-size:15px;color:var(--ink);font-weight:700;font-family:var(--mono);}
+.nav-name{font-size:15px;font-weight:700;} .nav-name span{color:var(--cyan);}
+.nav-v{font-size:10px;color:var(--text3);font-family:var(--mono);margin-right:6px;margin-top:2px;}
+.nav-pills{display:flex;gap:3px;}
+.npill{padding:5px 14px;border-radius:6px;background:transparent;border:1px solid transparent;
+  color:var(--text2);font-family:var(--sans);font-size:12px;cursor:pointer;transition:all .2s;}
+.npill:hover{color:var(--text);border-color:var(--line2);}
+.npill.active{background:var(--surf2);border-color:var(--cyan);color:var(--cyan);}
+.ai-badge{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);font-family:var(--mono);}
+.pdot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+
+/* ===== LAYOUT ===== */
+.app{display:grid;grid-template-columns:310px 1fr;min-height:calc(100vh - 58px);}
+.panel{background:var(--ink2);border-left:1px solid var(--line2);overflow-y:auto;
+  max-height:calc(100vh - 58px);position:sticky;top:58px;}
+.psec{padding:18px 20px;border-bottom:1px solid var(--line);}
+.ph{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:600;color:var(--text3);
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;font-family:var(--mono);}
+.ph::before{content:'';width:10px;height:2px;background:var(--cyan);display:block;}
+.ph.purple::before{background:var(--purple);}
+.ph.amber::before{background:var(--amber);}
+.ph.green::before{background:var(--green);}
+
+/* ===== FIELDS ===== */
+.field{margin-bottom:13px;}
+.flabel{font-size:11px;font-weight:500;color:var(--text2);margin-bottom:5px;
+  display:flex;align-items:center;justify-content:space-between;}
+.fhint{font-size:10px;color:var(--text3);font-family:var(--mono);}
+input[type=text],input[type=password],textarea,select{
+  width:100%;background:var(--surf3);border:1px solid var(--line2);color:var(--text);
+  border-radius:8px;padding:9px 12px;font-family:var(--sans);font-size:13px;transition:all .2s;outline:none;-webkit-appearance:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.1);background:var(--ink3);}
+input::placeholder,textarea::placeholder{color:var(--text3);}
+select option{background:var(--ink2);}
+.isec{position:relative;} .isec input{padding-left:34px;}
+.eye{position:absolute;left:9px;top:50%;transform:translateY(-50%);background:none;border:none;
+  color:var(--text3);cursor:pointer;font-size:14px;transition:color .2s;}
+.eye:hover{color:var(--cyan);}
+
+/* ===== TAGS ===== */
+.tagwrap{background:var(--surf3);border:1px solid var(--line2);border-radius:8px;padding:6px 10px;
+  display:flex;flex-wrap:wrap;gap:4px;min-height:36px;cursor:text;transition:all .2s;}
+.tagwrap:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,.1);}
+.chip{background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.3);color:var(--cyan);
+  border-radius:4px;padding:1px 6px;font-size:11px;display:flex;align-items:center;gap:3px;}
+.chip.purple-chip{background:rgba(179,136,255,.12);border-color:rgba(179,136,255,.3);color:var(--purple);}
+.chipx{cursor:pointer;font-size:13px;opacity:.6;} .chipx:hover{opacity:1;color:var(--rose);}
+.tagbare{background:transparent;border:none;outline:none;color:var(--text);font-size:12px;
+  flex:1;min-width:60px;font-family:var(--sans);}
+
+/* ===== TONE / LANG GRIDS ===== */
+.lang-btns,.tone-grid{display:flex;gap:4px;flex-wrap:wrap;}
+.lbtn,.tbtn{flex:1;min-width:60px;padding:7px 6px;background:var(--surf3);border:1px solid var(--line2);
+  border-radius:7px;color:var(--text2);font-family:var(--sans);font-size:11px;font-weight:500;
+  cursor:pointer;text-align:center;transition:all .18s;}
+.lbtn:hover,.tbtn:hover{border-color:var(--cyan);color:var(--text);}
+.lbtn.on,.tbtn.on{background:rgba(0,229,255,.1);border-color:var(--cyan);color:var(--cyan);}
+
+/* ===== SLIDER ===== */
+.strack{padding:4px 0;}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--line2);
+  border:none;border-radius:3px;padding:0;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;
+  background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan);}
+.slbls{display:flex;justify-content:space-between;font-size:9px;color:var(--text3);
+  margin-top:4px;font-family:var(--mono);}
+
+/* ===== TOGGLES ===== */
+.trow{display:flex;align-items:center;justify-content:space-between;padding:8px 0;
+  border-bottom:1px solid var(--line);}
+.trow:last-child{border-bottom:none;}
+.tlbl{font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px;}
+.toggler{width:36px;height:20px;background:var(--surf3);border:1px solid var(--line2);
+  border-radius:10px;position:relative;cursor:pointer;transition:all .3s;outline:none;}
+.toggler::after{content:'';position:absolute;width:14px;height:14px;background:var(--text3);
+  border-radius:50%;top:2px;right:2px;transition:all .3s;}
+.toggler.on{background:rgba(0,230,118,.2);border-color:var(--green);}
+.toggler.on::after{background:var(--green);transform:translateX(-16px);box-shadow:0 0 8px var(--green);}
+
+/* ===== ADVANCED MODE BADGE ===== */
+.adv-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
+  background:rgba(179,136,255,.15);border:1px solid rgba(179,136,255,.35);
+  border-radius:20px;font-size:10px;font-family:var(--mono);color:var(--purple);margin-bottom:10px;}
+.adv-on{background:rgba(179,136,255,.25);border-color:var(--purple);box-shadow:0 0 12px rgba(179,136,255,.2);}
+
+/* ===== ADVANCED FIELDS ===== */
+.adv-block{background:rgba(179,136,255,.05);border:1px solid rgba(179,136,255,.15);
+  border-radius:10px;padding:14px;margin-top:10px;display:none;}
+.adv-block.shown{display:block;}
+.adv-section{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(179,136,255,.1);}
+.adv-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.adv-title{font-size:10px;color:var(--purple);font-family:var(--mono);letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.adv-title::before{content:'▸';font-size:8px;}
+.kw-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.kw-input-wrap{position:relative;}
+.kw-num{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-size:9px;color:var(--text3);font-family:var(--mono);}
+.kw-input-wrap input{padding-right:28px;font-size:12px;}
+
+/* ===== WORKSPACE ===== */
+.workspace{padding:24px;overflow-y:auto;}
+.wsec{display:none;} .wsec.active{display:block;}
+.wsh{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;
+  font-family:var(--mono);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.wsh::after{content:'';flex:1;height:1px;background:var(--line2);}
+
+/* ===== GEN ZONE ===== */
+.genzone{background:linear-gradient(135deg,var(--surf) 0%,var(--ink2) 100%);
+  border:1px solid var(--line2);border-radius:14px;padding:20px;margin-bottom:18px;
+  position:relative;overflow:hidden;}
+.genzone::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,229,255,.03),rgba(179,136,255,.02));pointer-events:none;}
+.genbtn{width:100%;padding:15px;background:linear-gradient(135deg,var(--cyan),#00b8d4);
+  border:none;border-radius:11px;color:var(--ink);font-family:var(--sans);font-size:14px;
+  font-weight:700;cursor:pointer;transition:all .3s;display:flex;align-items:center;
+  justify-content:center;gap:10px;box-shadow:0 0 25px rgba(0,229,255,.3);position:relative;overflow:hidden;}
+.genbtn::after{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;
+  background:rgba(255,255,255,.15);transform:skewX(-20deg);transition:left .5s;}
+.genbtn:hover::after{left:120%;} .genbtn:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(0,229,255,.45);}
+.genbtn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.genbtn.adv-mode{background:linear-gradient(135deg,#7c4dff,#b388ff);}
+.genbtn.adv-mode:hover{box-shadow:0 0 40px rgba(179,136,255,.45);}
+
+/* ===== MODE INDICATOR ===== */
+.mode-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;
+  background:var(--surf3);border-radius:8px;border:1px solid var(--line2);}
+.mode-dot{width:8px;height:8px;border-radius:50%;}
+.mode-dot.std{background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.mode-dot.adv{background:var(--purple);box-shadow:0 0 6px var(--purple);}
+.mode-txt{font-size:11px;color:var(--text2);font-family:var(--mono);}
+.mode-feat{display:flex;gap:6px;margin-right:auto;}
+.mfeat{font-size:9px;padding:2px 7px;border-radius:10px;font-family:var(--mono);}
+.mfeat.c{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.2);}
+.mfeat.p{background:rgba(179,136,255,.1);color:var(--purple);border:1px solid rgba(179,136,255,.2);}
+.mfeat.g{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);}
+.mfeat.a{background:rgba(255,215,64,.1);color:var(--amber);border:1px solid rgba(255,215,64,.2);}
+
+/* ===== STATS ===== */
+.statsrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.sbadge{background:var(--ink2);border:1px solid var(--line2);border-radius:6px;
+  padding:4px 10px;font-size:11px;color:var(--text2);display:flex;align-items:center;
+  gap:4px;font-family:var(--mono);}
+.sbadge b{color:var(--cyan);font-weight:700;}
+.sbadge.g b{color:var(--green);} .sbadge.a b{color:var(--amber);}
+
+/* ===== ARTICLE CARD ===== */
+.artcard{background:var(--surf);border:1px solid var(--line2);border-radius:14px;
+  overflow:hidden;margin-bottom:18px;}
+.arthead{padding:12px 18px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;background:var(--ink2);}
+.arttitle{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:1px;
+  text-transform:uppercase;font-family:var(--mono);display:flex;align-items:center;gap:8px;}
+.arttabs{display:flex;gap:3px;}
+.atab{padding:4px 11px;background:transparent;border:1px solid transparent;border-radius:5px;
+  color:var(--text3);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s;}
+.atab.on{border-color:var(--line2);color:var(--text2);background:var(--surf3);}
+.artbody{padding:22px;min-height:360px;max-height:500px;overflow-y:auto;font-size:14px;line-height:1.9;}
+
+/* Empty / Loader */
+.estate{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:320px;color:var(--text3);gap:10px;}
+.eicon{font-size:42px;filter:grayscale(1) opacity(.3);}
+.loader{display:flex;flex-direction:column;align-items:center;justify-content:center;height:320px;gap:16px;}
+.lring{width:44px;height:44px;border:2px solid var(--line2);border-top-color:var(--cyan);
+  border-radius:50%;animation:spin .7s linear infinite;}
+.lring.purple{border-top-color:var(--purple);}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lmsg{font-size:12px;color:var(--text2);font-family:var(--mono);}
+.lsub{font-size:10px;color:var(--text3);font-family:var(--mono);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.lprog{display:flex;flex-direction:column;gap:6px;margin-top:8px;width:240px;}
+.lpstep{font-size:10px;font-family:var(--mono);display:flex;align-items:center;gap:6px;}
+.lpstep .dot{width:6px;height:6px;border-radius:50%;background:var(--text3);}
+.lpstep.done .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
+.lpstep.active .dot{background:var(--cyan);box-shadow:0 0 6px var(--cyan);animation:pulse 1s infinite;}
+
+/* Article HTML preview */
+.artbody h1{font-size:20px;color:var(--cyan);margin-bottom:14px;font-weight:700;line-height:1.4;}
+.artbody h2{font-size:16px;color:#ff6b6b;margin:20px 0 9px;font-weight:600;}
+.artbody h3{font-size:14px;color:#4a90d9;margin:14px 0 7px;font-weight:600;}
+.artbody p{margin-bottom:12px;color:var(--text);}
+.artbody strong{color:var(--amber);}
+.artbody em{color:var(--cyan2);}
+.artbody ul,.artbody ol{margin:8px 0 12px 18px;}
+.artbody li{margin-bottom:5px;color:var(--text);font-size:13px;}
+.artbody blockquote{border-right:3px solid var(--cyan);padding:8px 14px;
+  background:rgba(0,229,255,.05);border-radius:0 8px 8px 0;margin:12px 0;color:var(--text2);font-style:italic;}
+.artbody a[href=""]{pointer-events:none;color:var(--cyan);text-decoration:underline;}
+.artbody img{width:100%;border-radius:8px;margin:12px 0;max-height:200px;object-fit:cover;border:1px solid var(--line2);}
+
+/* ===== SEO CARD ===== */
+.seocard{background:var(--surf);border:1px solid rgba(0,229,255,.15);border-radius:14px;
+  padding:18px;margin-bottom:18px;display:none;}
+.seocard.shown{display:block;}
+.seoring{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:13px;font-weight:700;border:3px solid var(--green);
+  color:var(--green);box-shadow:0 0 12px rgba(0,230,118,.3);}
+.seor{display:flex;gap:12px;align-items:flex-start;margin-bottom:9px;padding-bottom:9px;
+  border-bottom:1px solid var(--line);}
+.seor:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.seok{font-size:10px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;
+  letter-spacing:1px;min-width:65px;padding-top:2px;}
+.seov{font-size:12px;color:var(--text);line-height:1.6;}
+
+/* ===== IMAGES ===== */
+.imgcard{background:var(--surf);border:1px solid var(--line2);border-radius:14px;
+  padding:18px;margin-bottom:18px;display:none;}
+.imgcard.shown{display:block;}
+.imggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.imgopt{border-radius:7px;overflow:hidden;border:2px solid transparent;cursor:pointer;
+  transition:all .2s;aspect-ratio:16/9;background:var(--ink2);position:relative;}
+.imgopt img{width:100%;height:100%;object-fit:cover;display:block;}
+.imgopt:hover{border-color:var(--cyan);transform:scale(1.02);}
+.imgopt.chosen{border-color:var(--green);}
+.imgchk{position:absolute;top:5px;left:5px;background:var(--green);color:var(--ink);
+  border-radius:4px;padding:1px 6px;font-size:9px;font-weight:700;font-family:var(--mono);display:none;}
+.imgopt.chosen .imgchk{display:block;}
+
+/* ===== ACTIONS ===== */
+.actrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.btnpub{padding:10px 20px;background:linear-gradient(135deg,var(--green),#00c853);
+  border:none;border-radius:9px;color:var(--ink);font-family:var(--sans);font-size:13px;
+  font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;
+  box-shadow:0 0 18px rgba(0,230,118,.25);}
+.btnpub:hover{transform:translateY(-2px);box-shadow:0 0 28px rgba(0,230,118,.4);}
+.btnpub:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btng{padding:10px 16px;background:var(--surf);border:1px solid var(--line2);border-radius:9px;
+  color:var(--text2);font-family:var(--sans);font-size:13px;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;gap:6px;}
+.btng:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* ===== HISTORY ===== */
+.hcard{background:var(--surf);border:1px solid var(--line2);border-radius:9px;
+  padding:12px 16px;margin-bottom:7px;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:space-between;}
+.hcard:hover{border-color:var(--cyan);transform:translateX(-3px);}
+.htitle{font-size:13px;font-weight:600;margin-bottom:4px;}
+.hmeta{display:flex;gap:10px;font-size:10px;color:var(--text3);font-family:var(--mono);}
+.badge{padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;font-family:var(--mono);text-transform:uppercase;}
+.bp{background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);}
+.bd{background:rgba(255,215,64,.15);color:var(--amber);border:1px solid rgba(255,215,64,.3);}
+.bs{background:rgba(0,229,255,.15);color:var(--cyan);border:1px solid rgba(0,229,255,.3);}
+
+/* ===== MODAL ===== */
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+  z-index:300;display:none;align-items:center;justify-content:center;}
+.moverlay.open{display:flex;}
+.modal{background:var(--ink2);border:1px solid var(--line2);border-radius:14px;
+  padding:26px;max-width:460px;width:90%;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.modal h3{font-size:15px;margin-bottom:8px;} .modal p{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.7;}
+.mbtns{display:flex;gap:8px;}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--ink2);border:1px solid var(--green);border-radius:9px;
+  padding:9px 18px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:7px;
+  box-shadow:0 0 22px rgba(0,230,118,.25);transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  z-index:999;white-space:nowrap;}
+.toast.up{transform:translateX(-50%) translateY(0);}
+.toast.err{border-color:var(--rose);box-shadow:0 0 22px rgba(255,64,129,.25);}
+
+/* ===== SCHED BOX ===== */
+.schedbox{background:rgba(255,215,64,.04);border:1px solid rgba(255,215,64,.15);
+  border-radius:8px;padding:11px;margin-top:9px;display:none;}
+.schedbox.shown{display:block;}
+input[type=datetime-local]{color-scheme:dark;}
+
+/* ===== SETTINGS CARDS ===== */
+.setcard{background:var(--surf);border:1px solid var(--line2);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.sethead{padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;
+  background:var(--ink2);font-size:11px;font-weight:600;color:var(--text2);letter-spacing:1px;
+  text-transform:uppercase;font-family:var(--mono);}
+.setbody{padding:18px;}
+.setdot{width:7px;height:7px;border-radius:50%;}
+.tip-box{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.1);border-radius:8px;
+  padding:12px;font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.8;margin-top:12px;}
+.guide-step{display:flex;align-items:flex-start;gap:10px;}
+.gs-num{width:22px;height:22px;min-width:22px;border-radius:50%;background:rgba(0,229,255,.15);
+  border:1px solid rgba(0,229,255,.3);color:var(--cyan);font-size:11px;font-weight:700;
+  font-family:var(--mono);display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.gs-txt{font-size:12px;color:var(--text);line-height:1.7;}
+
+/* VERIFY ROWS */
+.vrow{display:flex;align-items:center;gap:12px;padding:12px;background:var(--ink2);
+  border-radius:10px;border:1px solid var(--line2);transition:border-color .3s;}
+.vrow.ok{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.04);}
+.vrow.fail{border-color:rgba(255,64,129,.3);background:rgba(255,64,129,.04);}
+.vrow.checking{border-color:rgba(255,215,64,.2);}
+.vicon{font-size:22px;min-width:28px;text-align:center;}
+.vinfo{flex:1;}
+.vtitle{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.vdetail{font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.5;}
+.vstatus{font-size:11px;font-family:var(--mono);font-weight:700;white-space:nowrap;}
+
+@media(max-width:860px){.app{grid-template-columns:1fr;}.panel{position:static;max-height:none;order:2;}.workspace{order:1;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-icon">B</div>
+    <div>
+      <div class="nav-name">Blog<span>Mind</span> AI <span class="nav-v">v5</span></div>
+    </div>
+  </div>
+  <div class="nav-pills">
+    <button class="npill active" onclick="showSec('write',this)">✍️ كتابة</button>
+    <button class="npill" onclick="showSec('history',this)">📚 السجل</button>
+    <button class="npill" onclick="showSec('guide',this)">📖 دليل المفاتيح</button>
+    <button class="npill" onclick="showSec('settings',this)">⚙️ الإعدادات</button>
+  </div>
+  <div class="ai-badge">
+    <div class="pdot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></div>
+    <span style="color:#10b981;">OpenRouter ✦ مجاني لكل البلاد</span>
+  </div>
+</nav>
+
+<div class="app">
+
+<!-- ===== PANEL ===== -->
+<div class="panel">
+
+  <!-- Basic Info -->
+  <div class="psec">
+    <div class="ph">إعداد المقال</div>
+    <div class="field">
+      <div class="flabel">الموضوع / اسم التطبيق أو اللعبة <span class="fhint">*</span></div>
+      <textarea id="topic" rows="2" placeholder="مثال: لعبة PUBG Mobile — تطبيق تنزيل الفيديوهات..."></textarea>
+    </div>
+    <div class="field">
+      <div class="flabel">التصنيف</div>
+      <input type="text" id="cat" placeholder="ألعاب — تطبيقات أندرويد — تقنية...">
+    </div>
+    <div class="field">
+      <div class="flabel">الفئة المستهدفة</div>
+      <select id="target-cat">
+        <option value="مستخدمو أندرويد">مستخدمو أندرويد</option>
+        <option value="لاعبون">لاعبون</option>
+        <option value="مبتدئون">مبتدئون</option>
+        <option value="مطورون">مطورون</option>
+        <option value="عام">جمهور عام</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Language & Tone -->
+  <div class="psec">
+    <div class="ph">أسلوب الكتابة</div>
+    <div class="field">
+      <div class="flabel">اللغة</div>
+      <div class="lang-btns">
+        <button class="lbtn on" onclick="setLang('ar',this)">🇸🇦 عربي</button>
+        <button class="lbtn" onclick="setLang('en',this)">🇬🇧 English</button>
+        <button class="lbtn" onclick="setLang('bi',this)">🌐 ثنائي</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="flabel">النبرة</div>
+      <div class="tone-grid">
+        <button class="tbtn on" onclick="setTone('بسيط وطبيعي',this)">😊 بسيط</button>
+        <button class="tbtn" onclick="setTone('احترافي',this)">💼 احترافي</button>
+        <button class="tbtn" onclick="setTone('تعليمي',this)">📚 تعليمي</button>
+        <button class="tbtn" onclick="setTone('تسويقي',this)">🎯 تسويقي</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="flabel">طول المقال: <span id="len-lbl" style="color:var(--cyan);font-family:var(--mono)">1200 كلمة</span></div>
+      <div class="strack">
+        <input type="range" id="len-sl" min="1" max="3" value="2" step="1" oninput="onLen(this.value)">
+        <div class="slbls"><span>800</span><span>1200</span><span>1800+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔥 ADVANCED MODE -->
+  <div class="psec">
+    <div class="ph purple">⚡ الوضع المتقدم (AdSense)</div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div>
+        <div class="adv-badge" id="adv-badge">🔒 إيقاف</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px;">مقال آمن لـ AdSense + SEO محترف</div>
+      </div>
+      <button class="toggler" id="t-adv" onclick="toggleAdv()"></button>
+    </div>
+
+    <div class="adv-block" id="adv-block">
+
+      <!-- Keywords -->
+      <div class="adv-section">
+        <div class="adv-title">الكلمات المفتاحية (حتى 8)</div>
+        <div class="kw-grid" id="kw-grid">
+          <!-- generated dynamically -->
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:6px;font-family:var(--mono);">
+          K1 → H1 | K2-K3 → H2 | K4-K5 → H3 | K6-K8 → فقرات
+        </div>
+      </div>
+
+      <!-- Related Articles -->
+      <div class="adv-section">
+        <div class="adv-title">مقالات مقترحة في النهاية</div>
+        <div class="field" style="margin-bottom:8px;">
+          <input type="text" id="rel1" placeholder="عنوان المقال الأول...">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <input type="text" id="rel2" placeholder="عنوان المقال الثاني...">
+        </div>
+      </div>
+
+      <!-- Blog Name -->
+      <div class="adv-section">
+        <div class="adv-title">اسم المدونة (للمقالات المقترحة)</div>
+        <input type="text" id="blogname" placeholder="مثال: تك عربي">
+      </div>
+
+      <!-- Download link -->
+      <div class="adv-section">
+        <div class="adv-title">رابط التحميل</div>
+        <input type="text" id="dl-link" placeholder="https://play.google.com/...">
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">
+          سيُضاف زر تحميل HTML داخل المقال
+        </div>
+      </div>
+
+      <!-- Sections toggles -->
+      <div class="adv-section">
+        <div class="adv-title">أقسام المقال</div>
+        <div class="trow">
+          <div class="tlbl">❓ قسم الأسئلة الشائعة (FAQ)</div>
+          <button class="toggler on" id="t-faq" onclick="tog('t-faq')"></button>
+        </div>
+        <div class="trow">
+          <div class="tlbl">⚖️ مقارنة مع التطبيقات المنافسة</div>
+          <button class="toggler on" id="t-cmp" onclick="tog('t-cmp')"></button>
+        </div>
+        <div class="trow">
+          <div class="tlbl">🔧 قسم حل المشاكل</div>
+          <button class="toggler" id="t-fix" onclick="tog('t-fix')"></button>
+        </div>
+        <div class="trow">
+          <div class="tlbl">🎥 قسم الفيديو</div>
+          <button class="toggler" id="t-vid" onclick="tog('t-vid')"></button>
+        </div>
+      </div>
+
+    </div><!-- /adv-block -->
+  </div>
+
+  <!-- Standard Options -->
+  <div class="psec">
+    <div class="ph green">خيارات عامة</div>
+    <div class="trow">
+      <div class="tlbl">🖼️ صور تلقائية (Unsplash)</div>
+      <button class="toggler on" id="t-img" onclick="tog('t-img')"></button>
+    </div>
+    <div class="trow">
+      <div class="tlbl">🎯 SEO تلقائي</div>
+      <button class="toggler on" id="t-seo" onclick="tog('t-seo')"></button>
+    </div>
+    <div class="trow">
+      <div class="tlbl">🕐 جدولة النشر</div>
+      <button class="toggler" id="t-sched" onclick="tog('t-sched');toggleSched()"></button>
+    </div>
+    <div class="schedbox" id="schedbox">
+      <div class="flabel" style="margin-bottom:6px;">📅 موعد النشر</div>
+      <input type="datetime-local" id="sched-dt">
+    </div>
+  </div>
+
+</div><!-- /panel -->
+
+<!-- ===== WORKSPACE ===== -->
+<div class="workspace">
+
+  <!-- WRITE -->
+  <div class="wsec active" id="sec-write">
+
+    <!-- Mode bar -->
+    <div class="mode-bar" id="mode-bar">
+      <div class="mode-dot std" id="mode-dot"></div>
+      <div class="mode-txt" id="mode-txt">الوضع العادي</div>
+      <div class="mode-feat">
+        <span class="mfeat c" id="mf-seo" style="display:none">SEO</span>
+        <span class="mfeat p" id="mf-adv" style="display:none">AdSense Safe</span>
+        <span class="mfeat g" id="mf-img" style="display:none">صور</span>
+        <span class="mfeat a" id="mf-kw" style="display:none">8 كلمات</span>
+      </div>
+    </div>
+
+    <!-- Gen Zone -->
+    <div class="genzone">
+      <div class="wsh">التوليد</div>
+      <button class="genbtn" id="genbtn" onclick="generate()">
+        <span>✦</span><span id="gen-lbl">توليد مقال — OpenRouter مجاني</span>
+      </button>
+      <div class="statsrow" id="statsrow" style="display:none;">
+        <div class="sbadge">📝 <b id="sw">0</b> كلمة</div>
+        <div class="sbadge g">⏱ <b id="sr">0</b> دق</div>
+        <div class="sbadge a">🔤 <b id="sc">0</b> حرف</div>
+        <div class="sbadge" id="sb-seo" style="display:none;">🎯 SEO: <b id="ss">0%</b></div>
+        <div class="sbadge" id="sb-adv" style="display:none;background:rgba(179,136,255,.08);border-color:rgba(179,136,255,.2);">
+          ⚡ <b style="color:var(--purple);">AdSense ✓</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- Article Card -->
+    <div class="artcard">
+      <div class="arthead">
+        <div class="arttitle"><span style="width:6px;height:6px;border-radius:50%;background:var(--cyan);display:inline-block;box-shadow:0 0 6px var(--cyan);"></span>المقال المُولَّد</div>
+        <div class="arttabs">
+          <button class="atab on" id="tab-prev" onclick="switchView('preview')">معاينة</button>
+          <button class="atab" id="tab-raw" onclick="switchView('raw')">HTML</button>
+          <button class="atab" id="tab-txt" onclick="switchView('txt')">نص</button>
+        </div>
+      </div>
+      <div class="artbody" id="artview">
+        <div class="estate">
+          <div class="eicon">✍️</div>
+          <p>أدخل الموضوع واضغط "توليد"</p>
+          <small style="font-family:var(--mono);">// يعمل مع OpenRouter — مجاني في كل البلاد</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Card -->
+    <div class="seocard" id="seocard">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;font-family:var(--mono);margin-bottom:3px;">// SEO_DATA</div>
+          <div style="font-size:10px;color:var(--text3);">تهيئة محركات البحث</div>
+        </div>
+        <div class="seoring" id="seoring">—</div>
+      </div>
+      <div class="seor"><div class="seok">العنوان</div><div class="seov" id="seo-t">—</div></div>
+      <div class="seor"><div class="seok">الوصف</div><div class="seov" id="seo-d">—</div></div>
+      <div class="seor"><div class="seok">كلمات</div><div class="seov" id="seo-k">—</div></div>
+    </div>
+
+    <!-- Images Card -->
+    <div class="imgcard" id="imgcard">
+      <div class="wsh">اختر صورة للمقال</div>
+      <div style="font-size:12px;color:var(--text2);">صور من Unsplash — اختر ما يناسب موضوعك</div>
+      <div class="imggrid" id="imggrid"><div style="color:var(--text3);font-size:12px;grid-column:1/-1;text-align:center;padding:20px;font-family:var(--mono);">// جاري جلب الصور...</div></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actrow" id="actrow" style="display:none;">
+      <button class="btnpub" id="pub-btn" onclick="pubNow()">🚀 نشر على بلوجر</button>
+      <button class="btnpub" id="sched-btn" onclick="schedPub()"
+        style="background:linear-gradient(135deg,var(--amber),#f4a100);color:var(--ink);box-shadow:0 0 18px rgba(255,215,64,.25);display:none;">
+        🕐 جدولة النشر
+      </button>
+      <button class="btng" onclick="copyArt()">📋 نسخ HTML</button>
+      <button class="btng" onclick="dlArt()">💾 تحميل</button>
+      <button class="btng" onclick="generate()">🔄 إعادة</button>
+    </div>
+
+  </div><!-- /write -->
+
+  <!-- HISTORY -->
+  <div class="wsec" id="sec-history">
+    <div class="wsh">سجل المقالات</div>
+    <div id="hist-render">
+      <div style="text-align:center;padding:60px;color:var(--text3);font-family:var(--mono);">// لا توجد مقالات بعد</div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="wsec" id="sec-settings">
+    <div class="wsh">الإعدادات</div>
+
+    <div class="setcard">
+      <div class="sethead" style="background:rgba(16,185,129,.08);"><div class="setdot" style="background:#10b981;"></div>OpenRouter API — 🆓 مجاني لكل البلاد
+        <span style="margin-right:auto;background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);padding:2px 7px;border-radius:10px;font-size:9px;">✅ بدون قيود جغرافية</span>
+      </div>
+      <div class="setbody">
+        <div class="field">
+          <div class="flabel">🔑 OpenRouter API Key</div>
+          <div class="isec"><input type="password" id="cfg-ak" placeholder="sk-or-v1-..."><button class="eye" onclick="toggleEye('cfg-ak',this)">👁</button></div>
+          <div style="margin-top:8px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#7ea8d0;font-family:var(--mono);line-height:1.9;">
+            ✅ يشتغل في مصر وكل البلاد العربية<br>
+            ✅ موديلات مجانية بدون حد يومي<br>
+            ✅ بدون كريدت كارد للطبقة المجانية<br>
+            // احصل عليه: <a href="https://openrouter.ai/keys" target="_blank" style="color:#10b981;font-weight:600;">openrouter.ai/keys ↗</a>
+          </div>
+        </div>
+        <div class="field" style="margin-top:4px;">
+          <div class="flabel">🤖 الموديل</div>
+          <select id="cfg-model">
+            <option value="meta-llama/llama-3.3-70b-instruct:free">⭐ Llama 3.3 70B — مجاني الأفضل للعربي</option>
+            <option value="qwen/qwen-2.5-72b-instruct:free">Qwen 2.5 72B — مجاني عربي ممتاز</option>
+            <option value="deepseek/deepseek-r1:free">DeepSeek R1 — مجاني قوي جداً</option>
+            <option value="google/gemma-3-27b-it:free">Gemma 3 27B — مجاني من Google</option>
+            <option value="mistralai/mistral-7b-instruct:free">Mistral 7B — مجاني سريع</option>
+          </select>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">// كل الموديلات مجانية — الأحسن: Llama أو Qwen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setcard">
+      <div class="sethead"><div class="setdot" style="background:var(--green);"></div>Blogger API</div>
+      <div class="setbody">
+        <div class="field">
+          <div class="flabel">📰 Blog ID</div>
+          <input type="text" id="cfg-bid" placeholder="12345678901234567">
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">// من رابط بلوجر: blogger.com/blog/posts/<b style="color:var(--cyan);">BLOG_ID</b></div>
+        </div>
+        <div class="field">
+          <div class="flabel">🔐 Access Token</div>
+          <div class="isec"><input type="password" id="cfg-tok" placeholder="ya29.xxxxxxxx"><button class="eye" onclick="toggleEye('cfg-tok',this)">👁</button></div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">
+            // من: <a href="https://developers.google.com/oauthplayground" target="_blank" style="color:var(--cyan);">OAuth Playground ↗</a><br>
+            ⚠️ ينتهي كل ساعة — جدّده عند الحاجة
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <button class="btnpub" onclick="saveCfg()">💾 حفظ الإعدادات</button>
+      <button class="btng" id="verify-btn" onclick="verifyAll()" style="border-color:var(--amber);color:var(--amber);">
+        🔍 التحقق من المفاتيح
+      </button>
+    </div>
+
+    <!-- VERIFICATION RESULTS CARD -->
+    <div class="setcard" id="verify-card" style="display:none;border-color:rgba(255,215,64,.2);">
+      <div class="sethead" style="background:rgba(255,215,64,.06);">
+        <div class="setdot" style="background:var(--amber);"></div>
+        نتيجة التحقق
+        <span id="verify-overall" style="margin-right:auto;padding:2px 10px;border-radius:10px;font-size:10px;font-family:var(--mono);"></span>
+      </div>
+      <div class="setbody" style="display:flex;flex-direction:column;gap:10px;">
+
+        <!-- OpenRouter Check -->
+        <div class="vrow" id="v-api">
+          <div class="vicon" id="vi-api">⏳</div>
+          <div class="vinfo">
+            <div class="vtitle">OpenRouter API Key</div>
+            <div class="vdetail" id="vd-api">جاري التحقق...</div>
+          </div>
+          <div class="vstatus" id="vs-api">—</div>
+        </div>
+
+        <!-- Blog ID Check -->
+        <div class="vrow" id="v-bid">
+          <div class="vicon" id="vi-bid">⏳</div>
+          <div class="vinfo">
+            <div class="vtitle">Blog ID</div>
+            <div class="vdetail" id="vd-bid">جاري التحقق...</div>
+          </div>
+          <div class="vstatus" id="vs-bid">—</div>
+        </div>
+
+        <!-- Access Token Check -->
+        <div class="vrow" id="v-tok">
+          <div class="vicon" id="vi-tok">⏳</div>
+          <div class="vinfo">
+            <div class="vtitle">Access Token (Blogger)</div>
+            <div class="vdetail" id="vd-tok">جاري التحقق...</div>
+          </div>
+          <div class="vstatus" id="vs-tok">—</div>
+        </div>
+
+        <!-- Summary -->
+        <div id="verify-summary" style="display:none;background:var(--ink2);border-radius:8px;padding:12px;font-size:12px;font-family:var(--mono);color:var(--text2);line-height:1.9;margin-top:4px;border:1px solid var(--line2);"></div>
+
+      </div>
+    </div>
+
+    <div class="setcard">
+      <div class="sethead"><div class="setdot" style="background:var(--purple);"></div>مميزات الوضع المتقدم</div>
+      <div class="setbody">
+        <div class="tip-box">
+          ⚡ الوضع المتقدم يُولّد مقالاً:<br>
+          ✓ آمن لسياسة Google AdSense<br>
+          ✓ 8 كلمات مفتاحية موزّعة ذكياً<br>
+          ✓ H2 أحمر + H3 أزرق تلقائياً<br>
+          ✓ زر تحميل HTML جاهز<br>
+          ✓ مقارنة + FAQ + حل المشاكل<br>
+          ✓ مقالات مقترحة في النهاية<br>
+          ✓ أسلوب بشري غير مكتشف
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GUIDE -->
+  <div class="wsec" id="sec-guide">
+    <div class="wsh">📖 دليل الحصول على المفاتيح</div>
+
+    <!-- OPENROUTER -->
+    <div class="setcard" style="border-color:rgba(16,185,129,.3);">
+      <div class="sethead" style="background:rgba(16,185,129,.08);">
+        <div class="setdot" style="background:#10b981;"></div>
+        🔑 OpenRouter API Key — مجاني لكل البلاد ✅
+        <span style="margin-right:auto;background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);padding:2px 8px;border-radius:10px;font-size:9px;">✅ بيشتغل في مصر</span>
+      </div>
+      <div class="setbody">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="guide-step">
+            <div class="gs-num">1</div>
+            <div class="gs-txt">روح على: <a href="https://openrouter.ai" target="_blank" style="color:#10b981;font-weight:600;">openrouter.ai ↗</a></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">2</div>
+            <div class="gs-txt">اضغط <b style="color:#10b981;">"Sign in"</b> ← سجّل بـ Google أو GitHub أو إيميل عادي</div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">3</div>
+            <div class="gs-txt">بعد الدخول روح على: <a href="https://openrouter.ai/keys" target="_blank" style="color:#10b981;">openrouter.ai/keys ↗</a></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">4</div>
+            <div class="gs-txt">اضغط <b style="color:#10b981;">"Create Key"</b> ← اكتب أي اسم مثلاً <code style="background:var(--ink2);padding:1px 5px;border-radius:3px;">blogmind</code> ← اضغط <b>"Create"</b></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">5</div>
+            <div class="gs-txt">انسخ المفتاح فوراً — <b style="color:var(--rose);">مش هيتعرض تاني!</b></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">6</div>
+            <div class="gs-txt">روح <b>⚙️ الإعدادات</b> وحطه في خانة OpenRouter API Key ← اضغط <b>💾 حفظ</b></div>
+          </div>
+          <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text2);font-family:var(--mono);">
+            المفتاح بيبدأ بـ: <span style="color:#10b981;">sk-or-v1-...</span><br>
+            ✅ مجاني — لا يحتاج كريدت كارد<br>
+            ✅ يشتغل في مصر وكل البلاد العربية<br>
+            ✅ موديلات مجانية متعددة للاختيار
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOG ID -->
+    <div class="setcard" style="border-color:rgba(0,230,118,.2);">
+      <div class="sethead" style="background:rgba(0,230,118,.05);">
+        <div class="setdot" style="background:var(--green);"></div>
+        📰 Blog ID — ثابت مش بيتغير
+      </div>
+      <div class="setbody">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="guide-step">
+            <div class="gs-num">1</div>
+            <div class="gs-txt">روح على <a href="https://blogger.com" target="_blank" style="color:var(--green);">blogger.com ↗</a> وادخل على مدونتك</div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">2</div>
+            <div class="gs-txt">بص على الرابط في المتصفح — هتلاقي أرقام كبيرة في الرابط</div>
+          </div>
+          <div style="background:var(--ink2);border:1px solid var(--line2);border-radius:8px;padding:10px 12px;font-size:11px;font-family:var(--mono);color:var(--text2);word-break:break-all;">
+            blogger.com/blog/posts/<span style="color:var(--green);font-weight:700;background:rgba(0,230,118,.1);padding:1px 4px;border-radius:3px;">1234567890123456789</span>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">3</div>
+            <div class="gs-txt">الأرقام دي هي الـ Blog ID — انسخها وحطها في الإعدادات</div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num" style="background:rgba(0,230,118,.2);color:var(--green);">💡</div>
+            <div class="gs-txt"><b>طريقة تانية:</b> الإعدادات ← معلومات المدونة ← ستلاقي الـ ID</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCESS TOKEN -->
+    <div class="setcard" style="border-color:rgba(255,215,64,.2);">
+      <div class="sethead" style="background:rgba(255,215,64,.05);">
+        <div class="setdot" style="background:var(--amber);"></div>
+        🔐 Access Token — بيتجدد كل ساعة
+        <span style="margin-right:auto;background:rgba(255,215,64,.15);color:var(--amber);border:1px solid rgba(255,215,64,.3);padding:2px 8px;border-radius:10px;font-size:9px;">⚠️ ينتهي بعد ساعة</span>
+      </div>
+      <div class="setbody">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="guide-step">
+            <div class="gs-num">1</div>
+            <div class="gs-txt">روح على: <a href="https://developers.google.com/oauthplayground" target="_blank" style="color:var(--amber);">developers.google.com/oauthplayground ↗</a></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">2</div>
+            <div class="gs-txt">في الجانب الأيسر — ابحث عن <b>"Blogger API v3"</b> أو ادوّر على هذا الرابط وانسخه في البحث:</div>
+          </div>
+          <div style="background:var(--ink2);border:1px solid var(--line2);border-radius:8px;padding:10px 12px;font-size:11px;font-family:var(--mono);color:var(--cyan);word-break:break-all;">
+            https://www.googleapis.com/auth/blogger
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">3</div>
+            <div class="gs-txt">اختره من القايمة ← اضغط <b style="color:var(--amber);">"Authorize APIs"</b></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">4</div>
+            <div class="gs-txt">هيفتح نافذة Google — سجّل دخول بنفس أكاونت بلوجر ← اضغط <b>"Allow"</b></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">5</div>
+            <div class="gs-txt">هترجع للصفحة — اضغط <b style="color:var(--amber);">"Exchange authorization code for tokens"</b></div>
+          </div>
+          <div class="guide-step">
+            <div class="gs-num">6</div>
+            <div class="gs-txt">انسخ الـ <b>Access Token</b> من خانة "Access token" وحطه في الإعدادات</div>
+          </div>
+          <div style="background:rgba(255,215,64,.07);border:1px solid rgba(255,215,64,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text2);font-family:var(--mono);">
+            التوكن بيبدأ بـ: <span style="color:var(--amber);">ya29.xxxxxx</span><br>
+            ⚠️ بينتهي بعد ساعة — كرر الخطوات لو ظهرت رسالة خطأ 401
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARY TABLE -->
+    <div class="setcard">
+      <div class="sethead"><div class="setdot" style="background:var(--cyan);"></div>ملخص سريع</div>
+      <div class="setbody">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <tr style="border-bottom:1px solid var(--line2);">
+            <td style="padding:8px;color:var(--text2);font-family:var(--mono);">المفتاح</td>
+            <td style="padding:8px;color:var(--text2);font-family:var(--mono);">المصدر</td>
+            <td style="padding:8px;color:var(--text2);font-family:var(--mono);">مدة الصلاحية</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--line);">
+            <td style="padding:8px;color:#10b981;">OpenRouter Key</td>
+            <td style="padding:8px;color:var(--text);">openrouter.ai/keys</td>
+            <td style="padding:8px;color:var(--green);">دائم ✅</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--line);">
+            <td style="padding:8px;color:var(--green);">Blog ID</td>
+            <td style="padding:8px;color:var(--text);">رابط بلوجر</td>
+            <td style="padding:8px;color:var(--green);">دائم ✅</td>
+          </tr>
+          <tr>
+            <td style="padding:8px;color:var(--amber);">Access Token</td>
+            <td style="padding:8px;color:var(--text);">OAuth Playground</td>
+            <td style="padding:8px;color:var(--amber);">⚠️ ساعة واحدة</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px;">
+      <button class="btnpub" onclick="showSec('settings', document.querySelectorAll('.npill')[3])">
+        ⚙️ انتقل للإعدادات وأدخل المفاتيح
+      </button>
+    </div>
+  </div>
+
+</div><!-- /workspace -->
+</div><!-- /app -->
+
+<!-- MODAL -->
+<div class="moverlay" id="modal">
+  <div class="modal">
+    <h3 id="m-title">تأكيد</h3>
+    <p id="m-body">هل أنت متأكد؟</p>
+    <div class="mbtns">
+      <button class="btnpub" id="m-ok">تأكيد</button>
+      <button class="btng" onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================
+   STATE
+============================= */
+let selectedLang = 'ar';
+let selectedTone = 'بسيط وطبيعي';
+let advMode = false;
+let currentArticle = null;
+let currentSEO = null;
+let selectedImg = null;
+let viewMode = 'preview';
+let history = JSON.parse(localStorage.getItem('bm_hist') || '[]');
+let modalCb = null;
+
+const lenMap = {1:'800 كلمة', 2:'1200 كلمة', 3:'1800+ كلمة'};
+const lenWords = {1:800, 2:1200, 3:1800};
+
+/* ============================
+   INIT
+============================= */
+window.onload = () => {
+  loadCfg();
+  renderHistory();
+  buildKwGrid();
+};
+
+/* ============================
+   KEYWORD GRID
+============================= */
+function buildKwGrid() {
+  const g = document.getElementById('kw-grid');
+  g.innerHTML = Array.from({length:8}, (_,i) => `
+    <div class="kw-input-wrap">
+      <div class="kw-num">K${i+1}</div>
+      <input type="text" id="kw${i+1}" placeholder="كلمة ${i+1}">
+    </div>
+  `).join('');
+}
+
+function getKeywords() {
+  return Array.from({length:8}, (_,i) => {
+    const v = document.getElementById('kw'+(i+1));
+    return v ? v.value.trim() : '';
+  }).filter(Boolean);
+}
+
+/* ============================
+   ADVANCED MODE
+============================= */
+function toggleAdv() {
+  advMode = !advMode;
+  const tog = document.getElementById('t-adv');
+  const badge = document.getElementById('adv-badge');
+  const block = document.getElementById('adv-block');
+  const mdot = document.getElementById('mode-dot');
+  const mtxt = document.getElementById('mode-txt');
+  const gbtn = document.getElementById('genbtn');
+
+  tog.classList.toggle('on', advMode);
+  block.classList.toggle('shown', advMode);
+  badge.textContent = advMode ? '⚡ تشغيل' : '🔒 إيقاف';
+  badge.classList.toggle('adv-on', advMode);
+  mdot.className = 'mode-dot ' + (advMode ? 'adv' : 'std');
+  mtxt.textContent = advMode ? 'الوضع المتقدم — AdSense Safe' : 'الوضع العادي';
+  gbtn.classList.toggle('adv-mode', advMode);
+
+  document.getElementById('mf-adv').style.display = advMode ? 'inline-flex' : 'none';
+  document.getElementById('mf-kw').style.display = advMode ? 'inline-flex' : 'none';
+}
+
+/* ============================
+   SECTION NAV
+============================= */
+function showSec(sec, btn) {
+  document.querySelectorAll('.wsec').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+sec).classList.add('active');
+  document.querySelectorAll('.npill').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(sec==='history') renderHistory();
+}
+
+/* ============================
+   TOGGLES / MISC
+============================= */
+function tog(id){ document.getElementById(id).classList.toggle('on'); }
+function isOn(id){ return document.getElementById(id).classList.contains('on'); }
+function setLang(l,btn){ document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedLang=l; }
+function setTone(t,btn){ document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedTone=t; }
+function onLen(v){ document.getElementById('len-lbl').textContent = lenMap[v]; }
+function toggleSched(){
+  const on = isOn('t-sched');
+  document.getElementById('schedbox').classList.toggle('shown', on);
+  document.getElementById('sched-btn').style.display = on ? 'flex' : 'none';
+}
+function toggleEye(id,btn){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  btn.textContent=el.type==='password'?'👁':'🙈';
+}
+
+/* ============================
+   CONFIG
+============================= */
+function saveCfg(){
+  localStorage.setItem('bm_cfg', JSON.stringify({
+    ak: document.getElementById('cfg-ak').value,
+    bid: document.getElementById('cfg-bid').value,
+    tok: document.getElementById('cfg-tok').value,
+    model: document.getElementById('cfg-model').value
+  }));
+  toast('✅ تم حفظ الإعدادات');
+}
+function loadCfg(){
+  const c = JSON.parse(localStorage.getItem('bm_cfg')||'{}');
+  if(c.ak) document.getElementById('cfg-ak').value=c.ak;
+  if(c.bid) document.getElementById('cfg-bid').value=c.bid;
+  if(c.tok) document.getElementById('cfg-tok').value=c.tok;
+  if(c.model) document.getElementById('cfg-model').value=c.model;
+}
+function getCfg(){ return JSON.parse(localStorage.getItem('bm_cfg')||'{}'); }
+
+/* ============================
+   GENERATE
+============================= */
+async function generate(){
+  const cfg = getCfg();
+  const topic = document.getElementById('topic').value.trim();
+  if(!cfg.ak){ toast('❌ أدخل OpenRouter API Key في الإعدادات', true); return; }
+  if(!topic){ toast('❌ أدخل موضوع المقال', true); return; }
+
+  const btn = document.getElementById('genbtn');
+  const lbl = document.getElementById('gen-lbl');
+  btn.disabled=true;
+  lbl.textContent = advMode ? '⚡ توليد مقال AdSense متقدم...' : '⏳ جاري التوليد...';
+
+  document.getElementById('actrow').style.display='none';
+  document.getElementById('seocard').classList.remove('shown');
+  document.getElementById('imgcard').classList.remove('shown');
+  document.getElementById('statsrow').style.display='none';
+
+  showLoader(advMode);
+
+  const prompt = advMode ? buildAdvancedPrompt(topic) : buildStandardPrompt(topic);
+
+  try {
+    // ===== OpenRouter API — Smart Fallback System =====
+    // لو موديل اتعطل أو تجاوز الحد، يجرب التاني تلقائياً
+    const MODELS = [
+      { id: cfg.model || 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3' },
+      { id: 'qwen/qwen-2.5-72b-instruct:free',                     name: 'Qwen 2.5'  },
+      { id: 'deepseek/deepseek-r1:free',                           name: 'DeepSeek R1'},
+      { id: 'google/gemma-3-27b-it:free',                          name: 'Gemma 3'   },
+      { id: 'mistralai/mistral-7b-instruct:free',                  name: 'Mistral 7B' },
+    ];
+    // إزالة التكرار لو الموديل المختار هو نفس الأول في القايمة
+    const uniqueModels = [
+      MODELS[0],
+      ...MODELS.slice(1).filter(m => m.id !== MODELS[0].id)
+    ];
+
+    let data = null;
+    let usedModel = '';
+    let lastError = '';
+
+    for (let i = 0; i < uniqueModels.length; i++) {
+      const m = uniqueModels[i];
+      // تحديث loader بالموديل الحالي
+      const lmsg = document.querySelector('.lmsg');
+      if(lmsg) lmsg.textContent = `// جاري التجربة مع ${m.name}... (${i+1}/${uniqueModels.length})`;
+
+      try {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cfg.ak}`,
+            'HTTP-Referer': window.location.href,
+            'X-Title': 'BlogMind AI'
+          },
+          body: JSON.stringify({
+            model: m.id,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.85,
+            max_tokens: 8000
+          })
+        });
+
+        if (res.status === 401) {
+          throw new Error('__FATAL__:API Key خاطئ — تحقق من المفتاح في الإعدادات');
+        }
+
+        if (res.ok) {
+          const d = await res.json();
+          if (d.choices?.[0]?.message?.content) {
+            data = d;
+            usedModel = m.name;
+            break; // نجح — اخرج من اللوب
+          }
+        }
+        // 429 أو 402 أو غيرها — جرب الموديل التاني
+        lastError = `${m.name}: HTTP ${res.status}`;
+      } catch(innerErr) {
+        if(innerErr.message.startsWith('__FATAL__:')) throw new Error(innerErr.message.replace('__FATAL__:',''));
+        lastError = innerErr.message;
+      }
+    }
+
+    if (!data) {
+      throw new Error(`كل الموديلات المجانية تجاوزت الحد دلوقتي — حاول بعد ساعة\n(${lastError})`);
+    }
+
+    toast(`✅ كُتب المقال بواسطة ${usedModel}`, false);
+
+    let raw = data.choices[0].message.content;
+
+    // تنظيف markdown code blocks
+    raw = raw.replace(/^```html\n?/i,'').replace(/^```\n?/,'').replace(/\n?```$/,'').trim();
+
+    let artText = raw;
+
+    // Extract SEO block
+    if(isOn('t-seo') && raw.includes('===SEO===')) {
+      const parts = raw.split('===SEO===');
+      artText = parts[0].trim();
+      try {
+        currentSEO = JSON.parse(parts[1].split('===END===')[0].trim());
+        renderSEO(currentSEO);
+      } catch(e){}
+    }
+
+    currentArticle = artText;
+    viewMode='preview';
+    document.getElementById('tab-prev').classList.add('on');
+    document.getElementById('tab-raw').classList.remove('on');
+    document.getElementById('tab-txt').classList.remove('on');
+    renderArticle(artText);
+    updateStats(artText);
+
+    document.getElementById('statsrow').style.display='flex';
+    document.getElementById('actrow').style.display='flex';
+    document.getElementById('sb-adv').style.display = advMode ? 'flex' : 'none';
+
+    // SEO mode features
+    document.getElementById('mf-seo').style.display = isOn('t-seo') ? 'inline-flex' : 'none';
+    document.getElementById('mf-img').style.display = isOn('t-img') ? 'inline-flex' : 'none';
+
+    if(isOn('t-img')){ document.getElementById('imgcard').classList.add('shown'); loadImages(topic); }
+    toast(advMode ? '⚡ تم توليد مقال AdSense احترافي!' : '✅ تم توليد المقال!');
+
+  } catch(err) {
+    document.getElementById('artview').innerHTML=`
+      <div class="estate"><div style="font-size:32px">⚠️</div>
+      <p style="color:var(--rose)">${err.message}</p>
+      <small>// تحقق من API Key والاتصال بالإنترنت</small></div>`;
+    toast('❌ '+err.message, true);
+  } finally {
+    btn.disabled=false;
+    lbl.textContent = advMode ? 'توليد مقال AdSense متقدم' : 'توليد مقال — OpenRouter مجاني';
+  }
+}
+
+/* ============================
+   PROMPTS
+============================= */
+function buildStandardPrompt(topic){
+  const wc = lenWords[document.getElementById('len-sl').value];
+  const langStr = {ar:'العربية', en:'English', bi:'عربية مع مصطلحات إنجليزية'}[selectedLang];
+  const seoReq = isOn('t-seo') ? `\n\nبعد المقال أضف:\n===SEO===\n{"title":"عنوان SEO 60 حرف","description":"وصف 155 حرف","score":85}\n===END===` : '';
+  return `أنت كاتب محتوى رقمي محترف. اكتب مقالاً باللغة ${langStr} بأسلوب ${selectedTone}.
+الموضوع: ${topic}
+الطول: ~${wc} كلمة
+التصنيف: ${document.getElementById('cat').value || 'عام'}
+
+اكتب بأسلوب طبيعي واحترافي مع عناوين فرعية H2 وH3 منظمة. ابدأ مباشرة بالعنوان H1.${seoReq}`;
+}
+
+function buildAdvancedPrompt(topic){
+  const kws = getKeywords();
+  const wc = lenWords[document.getElementById('len-sl').value];
+  const dlLink = document.getElementById('dl-link').value.trim() || '#';
+  const rel1 = document.getElementById('rel1').value.trim();
+  const rel2 = document.getElementById('rel2').value.trim();
+  const blogname = document.getElementById('blogname').value.trim() || 'المدونة';
+  const cat = document.getElementById('cat').value.trim() || 'عام';
+  const targetCat = document.getElementById('target-cat').value;
+  const langStr = {ar:'العربية الفصحى المبسطة', en:'English (Professional)', bi:'عربية مع مصطلحات إنجليزية متخصصة'}[selectedLang];
+
+  const kwSection = kws.length > 0 ? `
+📌 الكلمات المفتاحية وتوزيعها الإلزامي:
+${kws.map((k,i)=>`${i+1}. "${k}"`).join('\n')}
+
+توزيع الكلمات المفتاحية:
+- الكلمة (1) "${kws[0]||''}" → داخل عنوان H1 حرفياً
+- الكلمات (2)-(3) → داخل عناوين H2 حرفياً
+- الكلمات (4)-(5) → داخل عناوين H3 أو أول جملة فقرة
+- الكلمات (6)-(8) → داخل الفقرات بشكل طبيعي` : '';
+
+  const faqSection = isOn('t-faq') ? `
+- ✅ أضف قسم H2 بعنوان "أسئلة شائعة حول ${topic}" يحتوي على 3-4 أسئلة وأجوبة بصيغة بشرية طبيعية` : '';
+
+  const cmpSection = isOn('t-cmp') ? `
+- ✅ أضف قسم H2 بعنوان: "مقارنة ${topic} مع تطبيقات أخرى من نفس المجال" — مقارنة حيادية وموضوعية بدون مبالغة أو تحقير للمنافسين` : '';
+
+  const fixSection = isOn('t-fix') ? `
+- ✅ أضف قسم H2 بعنوان "حل مشاكل ${topic} الشائعة" — فقط إذا وُجدت مشاكل وحلول حقيقية` : '';
+
+  const vidSection = isOn('t-vid') ? `
+- ✅ أضف عنوان H2 مخصص للفيديو + جملة واحدة فقط توضح أن الفيديو يشرح التطبيق عملياً` : '';
+
+  const relSection = (rel1||rel2) ? `
+- ✅ في نهاية المقال أضف قسم H2 بالنص التالي حرفياً:
+  "مقالات مختارة من ${blogname} قد تهمّك ضمن هذا المجال:"
+  ثم قائمة نقطية بالعناوين التالية بدون روابط:
+  ${rel1 ? `• ${rel1}` : ''}
+  ${rel2 ? `• ${rel2}` : ''}` : '';
+
+  const seoReq = isOn('t-seo') ? `
+
+بعد انتهاء المقال HTML كاملاً، أضف:
+===SEO===
+{"title":"${kws[0]||topic} — عنوان SEO دقيق لا يتجاوز 60 حرفاً","description":"وصف meta جذاب لا يتجاوز 155 حرفاً","score":88}
+===END===` : '';
+
+  return `أنت كاتب محتوى رقمي استثنائي متخصص في المحتوى العربي الآمن لـ Google AdSense.
+
+اكتب مقالاً بـ HTML كاملاً بالمواصفات التالية:
+
+📄 بيانات المقال:
+- الموضوع: ${topic}
+- اللغة: ${langStr}
+- النبرة: ${selectedTone}
+- الفئة المستهدفة: ${targetCat}
+- التصنيف: ${cat}
+- عدد الكلمات: لا يقل عن ${wc} كلمة
+${kwSection}
+
+✍️ قواعد الكتابة (إلزامية):
+- اكتب بأسلوب إنساني طبيعي 100% — كأن كاتباً حقيقياً يفكر ويحكي
+- جمل متفاوتة الطول بين القصيرة جداً والطويلة نسبياً
+- فقرات قصيرة (3-4 أسطر كحد أقصى)
+- لا حشو ولا تكرار — كل جملة تضيف قيمة حقيقية
+- تنوّع في بداية الفقرات — لا تبدأ كلها بنفس الطريقة
+- مسموح بأسلوب عفوي غير متوقع أحياناً
+- رأي شخصي وتجربة عند الحاجة
+
+🔒 شروط Google AdSense (إلزامية):
+- محتوى مفيد وآمن وغير مضلل تماماً
+- بدون عناوين Clickbait أو وعود زائفة
+- لا تحث على الضغط على أي إعلانات
+- لا تذكر Google AdSense أو الإعلانات
+
+📝 التنسيق HTML المطلوب:
+- <h1>العنوان الرئيسي</h1> — لا يزيد عن 65 حرفاً
+- <h2 style="color:red;">العناوين الفرعية</h2>
+- <h3 style="color:darkblue;">العناوين الثانوية</h3>
+- فقرات بـ <p> فقط
+- قوائم بـ <ul><li> عند الحاجة
+
+🧾 بنية المقال الإلزامية:
+1. مقدمة قصيرة تجيب مباشرة عن نية البحث
+2. قسم H2: "طريقة استخدام ${topic}" — خطوات مبسطة للمبتدئين
+${cmpSection}
+${faqSection}
+${fixSection}
+${vidSection}
+3. قسم H2 للتحميل يحتوي على كلمة مفتاحية + كلمة مشوّقة غير مضللة
+4. بعد عنوان التحميل: سطر قصير يوضح أن المصدر رسمي وآمن
+5. زر التحميل التالي بالضبط (مرة واحدة فقط):
+
+<div style="text-align:center; margin:25px 0;">
+  <a href="${dlLink}" style="display:inline-block;padding:16px 34px;background:linear-gradient(135deg,#1e88e5,#42a5f5);color:#ffffff;font-size:18px;font-weight:600;border-radius:12px;text-decoration:none;box-shadow:0 6px 18px rgba(30,136,229,0.35);">⬇️ تحميل ${topic} الآن</a>
+</div>
+
+${relSection}
+6. خاتمة بنصيحة واضحة ومحايدة تساعد القارئ على اتخاذ قرار مناسب له
+
+اكتب المقال HTML مباشرة بدون أي تعليق أو شرح منك.${seoReq}`;
+}
+
+/* ============================
+   RENDER
+============================= */
+function showLoader(isAdv){
+  const color = isAdv ? 'purple' : '';
+  document.getElementById('artview').innerHTML = `
+    <div class="loader">
+      <div class="lring ${color}"></div>
+      <div class="lmsg">${isAdv ? '⚡ توليد مقال AdSense احترافي...' : '// OpenRouter يكتب مقالك مجاناً...'}</div>
+      <div class="lprog">
+        <div class="lpstep done"><div class="dot"></div><span style="color:var(--text3);">تحليل الموضوع</span></div>
+        <div class="lpstep active"><div class="dot"></div><span style="color:var(--text2);">${isAdv ? 'توزيع الكلمات المفتاحية' : 'كتابة المحتوى'}</span></div>
+        <div class="lpstep"><div class="dot"></div><span>${isAdv ? 'SEO + AdSense Safety' : 'تحسين SEO'}</span></div>
+        <div class="lpstep"><div class="dot"></div><span>تنسيق HTML</span></div>
+      </div>
+      <div class="lsub">// قد يستغرق حتى 30 ثانية للمقال المتقدم</div>
+    </div>`;
+}
+
+function renderArticle(text){
+  const av = document.getElementById('artview');
+  if(viewMode==='raw'){
+    av.innerHTML = `<pre style="font-family:var(--mono);font-size:11px;color:var(--text2);white-space:pre-wrap;line-height:1.7;overflow-x:auto;">${escHtml(text)}</pre>`;
+    return;
+  }
+  if(viewMode==='txt'){
+    const stripped = text.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    av.innerHTML = `<div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;">${stripped}</div>`;
+    return;
+  }
+  // Preview — render HTML
+  // If article is already HTML (advanced mode), render directly
+  if(text.trim().startsWith('<')){
+    // Inject selected image after h1 if chosen
+    let rendered = text;
+    if(selectedImg){
+      rendered = rendered.replace(/<\/h1>/, `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
+    }
+    av.innerHTML = rendered;
+  } else {
+    // Convert markdown-like
+    let html = text
+      .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+      .replace(/^## (.+)$/gm,'<h2 style="color:red;">$1</h2>')
+      .replace(/^### (.+)$/gm,'<h3 style="color:darkblue;">$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .replace(/^- (.+)$/gm,'<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
+      .replace(/^(?!<[hHuUlLoObBpP]).+$/gm,m=>m.trim()?`<p>${m}</p>`:'');
+    if(selectedImg) html = html.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
+    av.innerHTML = html;
+  }
+}
+
+function switchView(mode){
+  viewMode=mode;
+  ['prev','raw','txt'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('on', t===mode.replace('preview','prev'));
+  });
+  if(currentArticle) renderArticle(currentArticle);
+}
+
+/* ============================
+   SEO
+============================= */
+function renderSEO(seo){
+  document.getElementById('seocard').classList.add('shown');
+  document.getElementById('seo-t').textContent = seo.title||'—';
+  document.getElementById('seo-d').textContent = seo.description||'—';
+  document.getElementById('seo-k').textContent = getKeywords().join('، ')||'—';
+  const sc = seo.score||80;
+  document.getElementById('seoring').textContent = sc+'%';
+  document.getElementById('ss').textContent = sc+'%';
+  document.getElementById('sb-seo').style.display='flex';
+}
+
+/* ============================
+   STATS
+============================= */
+function updateStats(text){
+  const stripped = text.replace(/<[^>]+>/g,' ');
+  const words = stripped.split(/\s+/).filter(Boolean).length;
+  const chars = stripped.length;
+  document.getElementById('sw').textContent = words.toLocaleString('ar');
+  document.getElementById('sc').textContent = chars.toLocaleString('ar');
+  document.getElementById('sr').textContent = Math.ceil(words/200);
+}
+
+/* ============================
+   IMAGES
+============================= */
+async function loadImages(topic){
+  const g = document.getElementById('imggrid');
+  g.innerHTML=`<div style="color:var(--text3);font-size:12px;grid-column:1/-1;text-align:center;padding:20px;font-family:var(--mono);">// جاري جلب الصور...</div>`;
+  const q = encodeURIComponent(topic.slice(0,50));
+  const imgs = Array.from({length:6},(_,i)=>`https://source.unsplash.com/featured/800x450/?${q}&sig=${i+Date.now()}`);
+  g.innerHTML = imgs.map((u,i)=>`
+    <div class="imgopt" id="io-${i}" onclick="pickImg('${u}',${i})">
+      <img src="${u}" alt="صورة ${i+1}" loading="lazy" onerror="this.parentElement.style.display='none'">
+      <div class="imgchk">✓ مختار</div>
+    </div>`).join('');
+}
+
+function pickImg(url, idx){
+  selectedImg = url;
+  document.querySelectorAll('.imgopt').forEach(el=>el.classList.remove('chosen'));
+  document.getElementById('io-'+idx).classList.add('chosen');
+  if(currentArticle) renderArticle(currentArticle);
+  toast('✅ تم اختيار الصورة');
+}
+
+/* ============================
+   PUBLISH
+============================= */
+async function pubNow(){
+  if(!currentArticle){ toast('❌ لا يوجد مقال',true); return; }
+  const cfg=getCfg();
+  if(!cfg.bid||!cfg.tok){ toast('❌ أدخل Blog ID و Access Token',true); return; }
+  openModal('🚀 تأكيد النشر', `نشر المقال الآن على بلوجر؟<br><small style="font-family:var(--mono);color:var(--text3);">// ${document.getElementById('topic').value.slice(0,60)}</small>`, ()=>doPublish(cfg));
+}
+
+async function schedPub(){
+  const tv = document.getElementById('sched-dt').value;
+  if(!tv){ toast('❌ حدد موعد النشر',true); return; }
+  const sd = new Date(tv);
+  if(sd<=new Date()){ toast('❌ الموعد يجب أن يكون في المستقبل',true); return; }
+  openModal('🕐 تأكيد الجدولة',`النشر في: <b style="color:var(--amber)">${sd.toLocaleString('ar-EG')}</b>`, ()=>{
+    toast(`✅ تمت الجدولة — ${Math.round((sd-Date.now())/60000)} دقيقة`);
+    saveToHistory('مجدول');
+    setTimeout(()=>{ const cfg=getCfg(); doPublish(cfg,true); }, sd-Date.now());
+  });
+}
+
+async function doPublish(cfg, isScheduled=false){
+  const pb = document.getElementById('pub-btn');
+  pb.disabled=true; pb.textContent='⏳ جاري النشر...';
+  const title = currentSEO?.title || document.getElementById('topic').value;
+  const content = buildFinalHTML();
+  const labels = [document.getElementById('cat').value].filter(Boolean);
+  try {
+    const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${cfg.bid}/posts/`,{
+      method:'POST',
+      headers:{'Authorization':`Bearer ${cfg.tok}`,'Content-Type':'application/json'},
+      body:JSON.stringify({title,content,labels})
+    });
+    if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||`HTTP ${res.status}`); }
+    const data=await res.json();
+    saveToHistory('منشور', data.url);
+    toast('🎉 تم النشر على بلوجر بنجاح!');
+    if(data.url) setTimeout(()=>window.open(data.url,'_blank'),1200);
+  } catch(err){ toast('❌ '+err.message,true); }
+  finally{ pb.disabled=false; pb.innerHTML='🚀 نشر على بلوجر'; }
+}
+
+function buildFinalHTML(){
+  if(!currentArticle) return '';
+  // If already HTML, use as-is
+  let content = currentArticle;
+  if(!content.trim().startsWith('<')){
+    content = content
+      .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+      .replace(/^## (.+)$/gm,'<h2 style="color:red;">$1</h2>')
+      .replace(/^### (.+)$/gm,'<h3 style="color:darkblue;">$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g,'<em>$1</em>')
+      .replace(/^- (.+)$/gm,'<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
+      .replace(/^(?!<[hHuUlLoObBpP]).+$/gm,m=>m.trim()?`<p>${m}</p>`:'');
+  }
+  if(selectedImg) content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
+  const style = `<style>body,div,p,h1,h2,h3,li{font-family:'Tajawal',Arial,sans-serif;line-height:1.9;}
+p{margin-bottom:15px;font-size:16px;color:#222;}
+h1{color:#1565c0;font-size:28px;margin-bottom:18px;}
+h2{font-size:22px;margin:26px 0 12px;}
+h3{font-size:18px;margin:18px 0 8px;}
+ul{margin:10px 0 14px 22px;} li{margin-bottom:6px;font-size:16px;}
+strong{color:#bf360c;} blockquote{border-right:4px solid #1565c0;padding:10px 16px;background:#e3f2fd;margin:16px 0;border-radius:0 8px 8px 0;}
+img{width:100%;border-radius:10px;margin:14px 0;}</style>`;
+  return style + content;
+}
+
+/* ============================
+   HISTORY
+============================= */
+function saveToHistory(status, url){
+  const entry = {
+    id: Date.now().toString(),
+    title: currentSEO?.title || document.getElementById('topic').value,
+    url: url||null,
+    topic: document.getElementById('topic').value,
+    date: new Date().toLocaleDateString('ar-EG'),
+    status,
+    words: document.getElementById('sw').textContent,
+    adv: advMode
+  };
+  history.unshift(entry);
+  localStorage.setItem('bm_hist', JSON.stringify(history.slice(0,50)));
+}
+
+function renderHistory(){
+  const el = document.getElementById('hist-render');
+  if(!history.length){
+    el.innerHTML=`<div style="text-align:center;padding:60px;color:var(--text3);font-family:var(--mono);">// لا توجد مقالات بعد</div>`;
+    return;
+  }
+  el.innerHTML = history.map(h=>`
+    <div class="hcard" onclick="${h.url?`window.open('${h.url}','_blank')`:''}">
+      <div>
+        <div class="htitle">${h.title} ${h.adv?'<span style="font-size:9px;color:var(--purple);background:rgba(179,136,255,.1);padding:1px 5px;border-radius:3px;font-family:var(--mono);">ADV</span>':''}</div>
+        <div class="hmeta">
+          <span>📅 ${h.date}</span><span>📝 ${h.words} كلمة</span>
+          ${h.url?`<span style="color:var(--cyan)">↗ فتح</span>`:''}
+        </div>
+      </div>
+      <span class="badge ${h.status==='منشور'?'bp':h.status==='مجدول'?'bs':'bd'}">${h.status}</span>
+    </div>`).join('');
+}
+
+/* ============================
+   ACTIONS
+============================= */
+function copyArt(){
+  if(!currentArticle) return;
+  const content = viewMode==='html'||viewMode==='raw' ? currentArticle : buildFinalHTML();
+  navigator.clipboard.writeText(currentArticle).then(()=>toast('✅ تم نسخ المحتوى'));
+}
+
+function dlArt(){
+  if(!currentArticle) return;
+  const html = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>مقال</title></head><body>${buildFinalHTML()}</body></html>`;
+  const blob = new Blob([html],{type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `article-${Date.now()}.html`;
+  a.click();
+  toast('✅ تم تحميل الملف');
+}
+
+/* ============================
+   MODAL
+============================= */
+function openModal(title, body, ok){
+  document.getElementById('m-title').textContent=title;
+  document.getElementById('m-body').innerHTML=body;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('m-ok').onclick=()=>{ closeModal(); if(ok) ok(); };
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
+
+/* ============================
+   VERIFY ALL KEYS — نسخة مصححة
+============================= */
+function setVRow(key, state, icon, detail, status) {
+  const row = document.getElementById('v-'+key);
+  const iEl = document.getElementById('vi-'+key);
+  const dEl = document.getElementById('vd-'+key);
+  const sEl = document.getElementById('vs-'+key);
+  if(!row) return;
+  row.className = 'vrow ' + state;
+  iEl.textContent = icon;
+  dEl.textContent = detail;
+  sEl.textContent = status;
+  sEl.style.color = state==='ok' ? 'var(--green)' : state==='fail' ? 'var(--rose)' : 'var(--amber)';
+}
+
+async function verifyAll() {
+  const cfg = getCfg();
+  const btn = document.getElementById('verify-btn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ جاري التحقق...';
+
+  const card = document.getElementById('verify-card');
+  card.style.display = 'block';
+  card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  // إعادة ضبط كل الصفوف
+  ['api','bid','tok'].forEach(k => setVRow(k,'checking','⏳','جاري التحقق الفعلي...','...'));
+  document.getElementById('verify-summary').style.display = 'none';
+  document.getElementById('verify-overall').textContent = '';
+
+  let okApi = false, okBid = false, okTok = false;
+
+  // ══════════════════════════════
+  // 1) OpenRouter API Key
+  //    بيبعت request حقيقي ويشوف الرد
+  // ══════════════════════════════
+  if (!cfg.ak || cfg.ak.trim() === '') {
+    setVRow('api','fail','❌','الخانة فارغة — أدخل OpenRouter API Key','فارغ ❌');
+  } else {
+    try {
+      const r = await fetch('https://openrouter.ai/api/v1/auth/key', {
+        headers: { 'Authorization': 'Bearer ' + cfg.ak.trim() }
+      });
+      if (r.ok) {
+        const d = await r.json();
+        const label = d.data?.label || 'بدون اسم';
+        const usage = d.data?.usage !== undefined ? `الاستخدام: $${Number(d.data.usage).toFixed(4)}` : '';
+        setVRow('api','ok','✅', `المفتاح صحيح ✅ — الاسم: "${label}" ${usage}`, 'شغّال ✅');
+        okApi = true;
+      } else if (r.status === 401) {
+        setVRow('api','fail','❌','المفتاح خاطئ أو محذوف — اعمل مفتاح جديد من openrouter.ai/keys','خاطئ ❌');
+      } else {
+        setVRow('api','fail','⚠️','خطأ غير متوقع: HTTP ' + r.status,'خطأ ⚠️');
+      }
+    } catch(e) {
+      setVRow('api','fail','❌','فشل الاتصال بـ OpenRouter — تحقق من الإنترنت','فشل الاتصال ❌');
+    }
+  }
+
+  // ══════════════════════════════
+  // 2) Blog ID + Access Token معاً
+  //    بيبعت request حقيقي لـ Blogger API
+  //    ده الفحص الوحيد الصح للاتنين
+  // ══════════════════════════════
+  const bid = (cfg.bid || '').trim();
+  const tok = (cfg.tok || '').trim();
+
+  // فحص Blog ID — شكل فقط أولاً
+  if (!bid) {
+    setVRow('bid','fail','❌','الخانة فارغة — أدخل Blog ID','فارغ ❌');
+  } else if (!/^\d+$/.test(bid)) {
+    setVRow('bid','fail','❌','Blog ID لازم يكون أرقام فقط — مثال: 1234567890123456789','خاطئ ❌');
+  } else {
+    setVRow('bid','checking','⏳','الشكل صح — جاري التحقق الفعلي من الـ API...','...');
+    okBid = true; // مؤقت — هيتأكد بعدين
+  }
+
+  // فحص Access Token — شكل فقط أولاً
+  if (!tok) {
+    setVRow('tok','fail','❌','الخانة فارغة — أدخل Access Token','فارغ ❌');
+  } else if (!tok.startsWith('ya29.')) {
+    setVRow('tok','fail','❌','التوكن لازم يبدأ بـ ya29. — اجيبه من OAuth Playground','خاطئ الشكل ❌');
+  } else {
+    setVRow('tok','checking','⏳','الشكل صح — جاري التحقق الفعلي من الـ API...','...');
+  }
+
+  // لو الاتنين شكلهم صح — نعمل فحص حقيقي واحد بيأكد الاتنين
+  if (okBid && tok.startsWith('ya29.')) {
+    try {
+      const r = await fetch(
+        `https://www.googleapis.com/blogger/v3/blogs/${bid}`,
+        { headers: { 'Authorization': 'Bearer ' + tok } }
+      );
+
+      if (r.ok) {
+        const d = await r.json();
+        const blogName = d.name || 'غير معروف';
+        const blogUrl  = d.url  || '';
+        // الاتنين صح
+        setVRow('bid','ok','✅', `Blog ID صحيح ✅ — المدونة: "${blogName}"`, 'صحيح ✅');
+        setVRow('tok','ok','✅', `التوكن شغّال ✅ — تم التحقق من المدونة: ${blogUrl}`, 'شغّال ✅');
+        okBid = true;
+        okTok = true;
+
+      } else if (r.status === 401) {
+        // التوكن منتهي أو غلط — Blog ID ممكن يكون صح
+        setVRow('bid','ok','✅', `شكل Blog ID صحيح — لكن التوكن منتهي فمش قادر نأكد`, 'يبدو صح ⚠️');
+        setVRow('tok','fail','❌',
+          'التوكن منتهي الصلاحية (HTTP 401) — روح OAuth Playground واجيب توكن جديد',
+          'منتهي ❌');
+        okBid = false; // مش مأكد
+        okTok = false;
+
+      } else if (r.status === 403) {
+        setVRow('bid','ok','✅', 'Blog ID يبدو صحيح', 'يبدو صح ✅');
+        setVRow('tok','fail','❌',
+          'التوكن مش عنده صلاحية Blogger — في OAuth Playground تأكد إنك اخترت: https://www.googleapis.com/auth/blogger',
+          'بدون صلاحية ❌');
+        okBid = true;
+        okTok = false;
+
+      } else if (r.status === 404) {
+        setVRow('bid','fail','❌',
+          'Blog ID مش موجود في بلوجر (HTTP 404) — تحقق من الأرقام مرة تانية',
+          'غير موجود ❌');
+        setVRow('tok','checking','⚠️',
+          'التوكن ممكن يكون صح — بس مش قادر نتحقق لأن Blog ID غلط',
+          'غير مأكد ⚠️');
+        okBid = false;
+        okTok = false;
+
+      } else {
+        const errTxt = await r.text().catch(()=>'');
+        setVRow('bid','fail','⚠️', `خطأ HTTP ${r.status}`, 'خطأ ⚠️');
+        setVRow('tok','fail','⚠️', `خطأ HTTP ${r.status} — ${errTxt.slice(0,80)}`, 'خطأ ⚠️');
+        okBid = false;
+        okTok = false;
+      }
+
+    } catch(e) {
+      setVRow('bid','fail','❌','فشل الاتصال بـ Blogger API — تحقق من الإنترنت','فشل ❌');
+      setVRow('tok','fail','❌','فشل الاتصال بـ Blogger API — تحقق من الإنترنت','فشل ❌');
+      okBid = false;
+      okTok = false;
+    }
+  }
+
+  // ══════════════════════════════
+  // ملخص النتيجة
+  // ══════════════════════════════
+  const allOk = okApi && okBid && okTok;
+  const overall = document.getElementById('verify-overall');
+
+  if (allOk) {
+    overall.textContent = '✅ كل المفاتيح شغّالة';
+    overall.style.cssText = 'background:rgba(0,230,118,.15);color:#00e676;border:1px solid rgba(0,230,118,.3);margin-right:auto;padding:2px 10px;border-radius:10px;font-size:10px;font-family:var(--mono);';
+  } else {
+    overall.textContent = '❌ في مشكلة — شوف التفاصيل';
+    overall.style.cssText = 'background:rgba(255,64,129,.15);color:#ff4081;border:1px solid rgba(255,64,129,.3);margin-right:auto;padding:2px 10px;border-radius:10px;font-size:10px;font-family:var(--mono);';
+  }
+
+  const sumEl = document.getElementById('verify-summary');
+  let lines = [];
+  if (!okApi) lines.push('🔑 اجيب OpenRouter API Key جديد من: <b>openrouter.ai/keys</b>');
+  if (!okBid) lines.push('📰 تحقق من Blog ID — الأرقام الموجودة في رابط بلوجر');
+  if (!okTok) lines.push('🔐 اجيب Access Token جديد من: <b>developers.google.com/oauthplayground</b> — ينتهي كل ساعة');
+  if (allOk)  lines.push('🎉 كل حاجة تمام! اضغط كتابة وابدأ التوليد الآن');
+
+  sumEl.innerHTML = lines.join('<br>');
+  sumEl.style.display = 'block';
+
+  btn.disabled = false;
+  btn.innerHTML = '🔍 التحقق من المفاتيح';
+
+  if (allOk) toast('✅ كل المفاتيح شغّالة فعلاً — ابدأ!');
+  else toast('❌ في مشكلة — شوف نتيجة التحقق', true);
+}
+
+
+function toast(msg, isErr=false){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast up'+(isErr?' err':'');
+  setTimeout(()=>t.className='toast',3500);
+}
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
