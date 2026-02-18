@@ -1214,6 +1214,16 @@ async function generate(){
     document.getElementById('tab-prev').classList.add('on');
     document.getElementById('tab-raw').classList.remove('on');
     document.getElementById('tab-txt').classList.remove('on');
+    
+    // توليد صور AI تلقائياً مع اللوجو
+    if(isOn('t-aiimg')){
+      document.getElementById('imgcard').classList.add('shown');
+      await autoGenerateImagesWithLogo(topic);
+    } else if(isOn('t-img')){
+      document.getElementById('imgcard').classList.add('shown'); 
+      loadImages(topic);
+    }
+    
     renderArticle(artText);
     updateStats(artText);
 
@@ -1223,9 +1233,8 @@ async function generate(){
 
     // SEO mode features
     document.getElementById('mf-seo').style.display = isOn('t-seo') ? 'inline-flex' : 'none';
-    document.getElementById('mf-img').style.display = isOn('t-img') ? 'inline-flex' : 'none';
+    document.getElementById('mf-img').style.display = (isOn('t-img')||isOn('t-aiimg')) ? 'inline-flex' : 'none';
 
-    if(isOn('t-img')){ document.getElementById('imgcard').classList.add('shown'); loadImages(topic); }
     toast(advMode ? '⚡ تم توليد مقال AdSense احترافي!' : '✅ تم توليد المقال!');
 
   } catch(err) {
@@ -1388,14 +1397,49 @@ function renderArticle(text){
     av.innerHTML = `<div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;">${stripped}</div>`;
     return;
   }
+  
   // Preview — render HTML
-  // If article is already HTML (advanced mode), render directly
   if(text.trim().startsWith('<')){
-    // Inject selected image after h1 if chosen
     let rendered = text;
-    if(selectedImg){
-      rendered = rendered.replace(/<\/h1>/, `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
+    
+    // إدراج الصور التلقائية لو موجودة
+    if(generatedImages.first && generatedImages.middle){
+      // الصورة الأولى بعد H1 مباشرة
+      rendered = rendered.replace(
+        /<\/h1>/i,
+        `</h1><img src="${generatedImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.1);" loading="lazy">`
+      );
+      
+      // الصورة الثانية في منتصف المقال — بعد نص H2 تقريباً
+      const h2Match = rendered.match(/<\/h2>/gi);
+      if(h2Match && h2Match.length >= 2){
+        // بعد ثاني H2
+        let count = 0;
+        rendered = rendered.replace(/<\/h2>/gi, (match)=>{
+          count++;
+          if(count === 2){
+            return `</h2><img src="${generatedImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.1);" loading="lazy">`;
+          }
+          return match;
+        });
+      } else {
+        // لو مفيش H2 كفاية، حطها قبل آخر فقرة
+        const lastP = rendered.lastIndexOf('</p>');
+        if(lastP > 0){
+          rendered = rendered.slice(0,lastP) + 
+            `<img src="${generatedImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.1);" loading="lazy">` +
+            rendered.slice(lastP);
+        }
+      }
     }
+    // لو صورة Unsplash مختارة وصور AI مش موجودة
+    else if(selectedImg && !generatedImages.first){
+      rendered = rendered.replace(
+        /<\/h1>/i,
+        `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`
+      );
+    }
+    
     av.innerHTML = rendered;
   } else {
     // Convert markdown-like
@@ -1448,8 +1492,79 @@ function updateStats(text){
 }
 
 /* ============================
-   LOGO UPLOAD
+   AUTO AI IMAGES + LOGO — تلقائي
 ============================= */
+let generatedImages = { first: null, middle: null };
+
+async function autoGenerateImagesWithLogo(topic){
+  if(!logoDataUrl){
+    toast('⚠️ ارفع لوجو من الشريط الجانبي أولاً', true);
+    return;
+  }
+
+  toast('🎨 جاري توليد صورتين بالـ AI + إضافة اللوجو...');
+  
+  const seed1 = Math.floor(Math.random()*99999);
+  const seed2 = Math.floor(Math.random()*99999);
+  const p1 = encodeURIComponent(`${topic}, professional blog header, modern flat design, vibrant colors, 4k`);
+  const p2 = encodeURIComponent(`${topic}, digital illustration, clean editorial style, high quality photography`);
+  const url1 = `https://image.pollinations.ai/prompt/${p1}?width=1200&height=630&seed=${seed1}&nologo=true`;
+  const url2 = `https://image.pollinations.ai/prompt/${p2}?width=1200&height=630&seed=${seed2}&nologo=true`;
+
+  try {
+    // توليد الصورة الأولى مع اللوجو
+    generatedImages.first = await addLogoToImageURL(url1);
+    // توليد الصورة الثانية مع اللوجو
+    generatedImages.middle = await addLogoToImageURL(url2);
+    
+    toast('✅ تم توليد صورتين + إضافة اللوجو — تم إدراجهم في المقال');
+    
+    // إعادة رسم المقال بالصور الجديدة
+    if(currentArticle) renderArticle(currentArticle);
+    
+  } catch(e){
+    toast('❌ فشل توليد الصور — تحقق من الإنترنت', true);
+  }
+}
+
+async function addLogoToImageURL(imgURL){
+  return new Promise((resolve, reject)=>{
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    const mainImg = new Image();
+    mainImg.crossOrigin = 'anonymous';
+    mainImg.onload = ()=>{
+      canvas.width = 1200;
+      canvas.height = 630;
+      ctx.drawImage(mainImg, 0, 0, canvas.width, canvas.height);
+      
+      const logoImg = new Image();
+      logoImg.onload = ()=>{
+        // لوجو في أعلى يمين — 20% من عرض الصورة
+        const logoW = canvas.width * 0.20;
+        const logoH = (logoImg.naturalHeight / logoImg.naturalWidth) * logoW;
+        const pad = canvas.width * 0.025;
+        const x = canvas.width - logoW - pad;
+        const y = pad;
+        
+        ctx.globalAlpha = 0.88;
+        ctx.drawImage(logoImg, x, y, logoW, logoH);
+        ctx.globalAlpha = 1;
+        
+        // تحويل لـ WebP
+        const webpDataURL = canvas.toDataURL('image/webp', 0.92);
+        resolve(webpDataURL);
+      };
+      logoImg.onerror = ()=> reject('فشل تحميل اللوجو');
+      logoImg.src = logoDataUrl;
+    };
+    mainImg.onerror = ()=> reject('فشل تحميل الصورة');
+    mainImg.src = imgURL;
+  });
+}
+
+
 let logoDataUrl = null;
 document.addEventListener('DOMContentLoaded', ()=>{
   const lf = document.getElementById('logo-file');
@@ -1654,8 +1769,9 @@ async function doPublish(cfg, isScheduled=false){
 
 function buildFinalHTML(){
   if(!currentArticle) return '';
-  // If already HTML, use as-is
   let content = currentArticle;
+  
+  // تحويل markdown لو مش HTML
   if(!content.trim().startsWith('<')){
     content = content
       .replace(/^# (.+)$/gm,'<h1>$1</h1>')
@@ -1667,12 +1783,42 @@ function buildFinalHTML(){
       .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
       .replace(/^(?!<[hHuUlLoObBpP]).+$/gm,m=>m.trim()?`<p>${m}</p>`:'');
   }
-  if(selectedImg) content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
+  
+  // إدراج الصور التلقائية في مكانين
+  if(generatedImages.first && generatedImages.middle){
+    // الصورة الأولى بعد H1
+    content = content.replace(
+      /<\/h1>/i,
+      `</h1><img src="${generatedImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.08);" loading="lazy">`
+    );
+    
+    // الصورة الثانية في المنتصف
+    const h2Match = content.match(/<\/h2>/gi);
+    if(h2Match && h2Match.length >= 2){
+      let count = 0;
+      content = content.replace(/<\/h2>/gi, (match)=>{
+        count++;
+        if(count === 2){
+          return `</h2><img src="${generatedImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.08);" loading="lazy">`;
+        }
+        return match;
+      });
+    }
+  } else if(selectedImg && !generatedImages.first){
+    // صورة Unsplash فقط
+    content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
+  }
+  
   const style = `<style>body,div,p,h1,h2,h3,li{font-family:'Tajawal',Arial,sans-serif;line-height:1.9;}
 p{margin-bottom:15px;font-size:16px;color:#222;}
 h1{color:#1565c0;font-size:28px;margin-bottom:18px;}
 h2{font-size:22px;margin:26px 0 12px;}
 h3{font-size:18px;margin:18px 0 8px;}
+ul{margin:10px 0 14px 22px;} li{margin-bottom:6px;font-size:16px;}
+strong{color:#bf360c;} blockquote{border-right:4px solid #1565c0;padding:10px 16px;background:#e3f2fd;margin:16px 0;border-radius:0 8px 8px 0;}
+img{width:100%;border-radius:10px;margin:14px 0;}</style>`;
+  return style + content;
+}
 ul{margin:10px 0 14px 22px;} li{margin-bottom:6px;font-size:16px;}
 strong{color:#bf360c;} blockquote{border-right:4px solid #1565c0;padding:10px 16px;background:#e3f2fd;margin:16px 0;border-radius:0 8px 8px 0;}
 img{width:100%;border-radius:10px;margin:14px 0;}</style>`;
