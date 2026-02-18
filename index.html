@@ -313,18 +313,6 @@ input[type=datetime-local]{color-scheme:dark;}
   font-family:var(--mono);display:flex;align-items:center;justify-content:center;margin-top:1px;}
 .gs-txt{font-size:12px;color:var(--text);line-height:1.7;}
 
-/* VERIFY ROWS */
-.vrow{display:flex;align-items:center;gap:12px;padding:12px;background:var(--ink2);
-  border-radius:10px;border:1px solid var(--line2);transition:border-color .3s;}
-.vrow.ok{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.04);}
-.vrow.fail{border-color:rgba(255,64,129,.3);background:rgba(255,64,129,.04);}
-.vrow.checking{border-color:rgba(255,215,64,.2);}
-.vicon{font-size:22px;min-width:28px;text-align:center;}
-.vinfo{flex:1;}
-.vtitle{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
-.vdetail{font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.5;}
-.vstatus{font-size:11px;font-family:var(--mono);font-weight:700;white-space:nowrap;}
-
 @media(max-width:860px){.app{grid-template-columns:1fr;}.panel{position:static;max-height:none;order:2;}.workspace{order:1;}}
 </style>
 </head>
@@ -346,7 +334,7 @@ input[type=datetime-local]{color-scheme:dark;}
   </div>
   <div class="ai-badge">
     <div class="pdot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></div>
-    <span style="color:#10b981;">OpenRouter ✦ مجاني لكل البلاد</span>
+    <span style="color:#10b981;">OpenRouter ✦ مجاني</span>
   </div>
 </nav>
 
@@ -490,7 +478,7 @@ input[type=datetime-local]{color-scheme:dark;}
       <button class="toggler on" id="t-img" onclick="tog('t-img')"></button>
     </div>
     <div class="trow">
-      <div class="tlbl">🤖 صور AI (Pollinations — مجاني)</div>
+      <div class="tlbl">🤖 صور AI تلقائية + لوجو</div>
       <button class="toggler" id="t-aiimg" onclick="tog('t-aiimg')"></button>
     </div>
     <div class="trow">
@@ -508,13 +496,13 @@ input[type=datetime-local]{color-scheme:dark;}
   </div>
 
   <!-- Logo Upload -->
-  <div class="psec">
+  <div class="psec" id="logo-section" style="display:none;">
     <div class="ph amber">🏷️ لوجو الموقع</div>
     <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:var(--mono);">
-      // يُضاف على الصور تلقائياً كعلامة مائية
+      // يُضاف تلقائياً على صور AI — أعلى يمين
     </div>
     <div class="field">
-      <div class="flabel">ارفع اللوجو (PNG شفاف أحسن)</div>
+      <div class="flabel">ارفع اللوجو (PNG شفاف أفضل)</div>
       <input type="file" id="logo-file" accept="image/*"
         style="background:var(--surf3);border:1px dashed var(--amber);border-radius:8px;
         padding:8px;color:var(--text2);font-size:11px;cursor:pointer;">
@@ -522,21 +510,6 @@ input[type=datetime-local]{color-scheme:dark;}
     <div id="logo-preview" style="display:none;margin-top:8px;text-align:center;">
       <img id="logo-img" style="max-height:50px;border-radius:6px;border:1px solid var(--line2);">
       <div style="font-size:10px;color:var(--green);margin-top:4px;font-family:var(--mono);">✅ اللوجو جاهز</div>
-    </div>
-    <div class="field" style="margin-top:10px;">
-      <div class="flabel">موقع اللوجو</div>
-      <select id="logo-pos">
-        <option value="bottom-right">أسفل يمين</option>
-        <option value="bottom-left">أسفل يسار</option>
-        <option value="top-right">أعلى يمين</option>
-        <option value="top-left">أعلى يسار</option>
-        <option value="center">المنتصف</option>
-      </select>
-    </div>
-    <div class="field">
-      <div class="flabel">حجم اللوجو: <span id="logo-size-lbl" style="color:var(--amber);font-family:var(--mono);">25%</span></div>
-      <input type="range" id="logo-size" min="10" max="50" value="25"
-        oninput="document.getElementById('logo-size-lbl').textContent=this.value+'%'">
     </div>
   </div>
 
@@ -591,7 +564,7 @@ input[type=datetime-local]{color-scheme:dark;}
         <div class="estate">
           <div class="eicon">✍️</div>
           <p>أدخل الموضوع واضغط "توليد"</p>
-          <small style="font-family:var(--mono);">// يعمل مع OpenRouter — مجاني في كل البلاد</small>
+          <small style="font-family:var(--mono);">// يعمل مع Gemini مجاناً — 1500 مقال/يوم</small>
         </div>
       </div>
     </div>
@@ -612,53 +585,9 @@ input[type=datetime-local]{color-scheme:dark;}
 
     <!-- Images Card -->
     <div class="imgcard" id="imgcard">
-      <div class="wsh">🖼️ الصور</div>
-
-      <!-- Tab selector -->
-      <div style="display:flex;gap:6px;margin-bottom:14px;">
-        <button class="atab on" id="img-tab-unsplash" onclick="switchImgTab('unsplash')">Unsplash</button>
-        <button class="atab" id="img-tab-ai" onclick="switchImgTab('ai')">🤖 AI صور</button>
-      </div>
-
-      <!-- Unsplash grid -->
-      <div id="img-unsplash-sec">
-        <div style="font-size:11px;color:var(--text2);margin-bottom:8px;">اختر صورة — ستُضاف اللوجو عليها تلقائياً</div>
-        <div class="imggrid" id="imggrid"></div>
-      </div>
-
-      <!-- AI Image generation -->
-      <div id="img-ai-sec" style="display:none;">
-        <div style="font-size:11px;color:var(--text2);margin-bottom:10px;">
-          بيولّد صورتين بالذكاء الاصطناعي بناءً على موضوع المقال — مجاناً 🆓
-        </div>
-        <button class="btng" id="gen-ai-imgs-btn" onclick="generateAIImages()"
-          style="width:100%;border-color:var(--purple);color:var(--purple);margin-bottom:12px;justify-content:center;">
-          🎨 توليد صورتين بالـ AI
-        </button>
-        <div class="imggrid" id="ai-imggrid" style="grid-template-columns:1fr 1fr;">
-          <div style="color:var(--text3);font-size:11px;grid-column:1/-1;text-align:center;padding:20px;font-family:var(--mono);">
-            // اضغط "توليد" لإنشاء صورتين بالذكاء الاصطناعي
-          </div>
-        </div>
-      </div>
-
-      <!-- Selected image preview with logo -->
-      <div id="img-result-sec" style="display:none;margin-top:14px;">
-        <div class="wsh">معاينة الصورة + اللوجو</div>
-        <canvas id="img-canvas" style="width:100%;border-radius:10px;border:1px solid var(--line2);display:block;"></canvas>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-          <button class="btnpub" onclick="downloadWebP()"
-            style="background:linear-gradient(135deg,var(--purple),#7c4dff);box-shadow:0 0 18px rgba(179,136,255,.25);">
-            ⬇️ تحميل WebP
-          </button>
-          <button class="btng" onclick="downloadPNG()">📥 تحميل PNG</button>
-          <button class="btng" onclick="useInArticle()">📌 إضافة للمقال</button>
-        </div>
-        <div style="font-size:10px;color:var(--text3);margin-top:6px;font-family:var(--mono);">
-          // الصورة محمية بلوجو موقعك — غير مسروقة ✅
-        </div>
-      </div>
-
+      <div class="wsh">اختر صورة للمقال</div>
+      <div style="font-size:12px;color:var(--text2);">صور من Unsplash — اختر ما يناسب موضوعك</div>
+      <div class="imggrid" id="imggrid"><div style="color:var(--text3);font-size:12px;grid-column:1/-1;text-align:center;padding:20px;font-family:var(--mono);">// جاري جلب الصور...</div></div>
     </div>
 
     <!-- Actions -->
@@ -688,30 +617,16 @@ input[type=datetime-local]{color-scheme:dark;}
     <div class="wsh">الإعدادات</div>
 
     <div class="setcard">
-      <div class="sethead" style="background:rgba(16,185,129,.08);"><div class="setdot" style="background:#10b981;"></div>OpenRouter API — 🆓 مجاني لكل البلاد
-        <span style="margin-right:auto;background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);padding:2px 7px;border-radius:10px;font-size:9px;">✅ بدون قيود جغرافية</span>
-      </div>
+      <div class="sethead" style="background:rgba(16,185,129,.08);"><div class="setdot" style="background:#10b981;"></div>OpenRouter API — 🆓 مجاني</div>
       <div class="setbody">
         <div class="field">
           <div class="flabel">🔑 OpenRouter API Key</div>
           <div class="isec"><input type="password" id="cfg-ak" placeholder="sk-or-v1-..."><button class="eye" onclick="toggleEye('cfg-ak',this)">👁</button></div>
           <div style="margin-top:8px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#7ea8d0;font-family:var(--mono);line-height:1.9;">
-            ✅ يشتغل في مصر وكل البلاد العربية<br>
-            ✅ موديلات مجانية بدون حد يومي<br>
-            ✅ بدون كريدت كارد للطبقة المجانية<br>
+            ✅ يشتغل في كل البلاد العربية<br>
+            ✅ موديلات مجانية متعددة<br>
             // احصل عليه: <a href="https://openrouter.ai/keys" target="_blank" style="color:#10b981;font-weight:600;">openrouter.ai/keys ↗</a>
           </div>
-        </div>
-        <div class="field" style="margin-top:4px;">
-          <div class="flabel">🤖 الموديل</div>
-          <select id="cfg-model">
-            <option value="meta-llama/llama-3.3-70b-instruct:free">⭐ Llama 3.3 70B — مجاني الأفضل للعربي</option>
-            <option value="qwen/qwen-2.5-72b-instruct:free">Qwen 2.5 72B — مجاني عربي ممتاز</option>
-            <option value="deepseek/deepseek-r1:free">DeepSeek R1 — مجاني قوي جداً</option>
-            <option value="google/gemma-3-27b-it:free">Gemma 3 27B — مجاني من Google</option>
-            <option value="mistralai/mistral-7b-instruct:free">Mistral 7B — مجاني سريع</option>
-          </select>
-          <div style="font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);">// كل الموديلات مجانية — الأحسن: Llama أو Qwen</div>
         </div>
       </div>
     </div>
@@ -735,57 +650,7 @@ input[type=datetime-local]{color-scheme:dark;}
       </div>
     </div>
 
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-      <button class="btnpub" onclick="saveCfg()">💾 حفظ الإعدادات</button>
-      <button class="btng" id="verify-btn" onclick="verifyAll()" style="border-color:var(--amber);color:var(--amber);">
-        🔍 التحقق من المفاتيح
-      </button>
-    </div>
-
-    <!-- VERIFICATION RESULTS CARD -->
-    <div class="setcard" id="verify-card" style="display:none;border-color:rgba(255,215,64,.2);">
-      <div class="sethead" style="background:rgba(255,215,64,.06);">
-        <div class="setdot" style="background:var(--amber);"></div>
-        نتيجة التحقق
-        <span id="verify-overall" style="margin-right:auto;padding:2px 10px;border-radius:10px;font-size:10px;font-family:var(--mono);"></span>
-      </div>
-      <div class="setbody" style="display:flex;flex-direction:column;gap:10px;">
-
-        <!-- OpenRouter Check -->
-        <div class="vrow" id="v-api">
-          <div class="vicon" id="vi-api">⏳</div>
-          <div class="vinfo">
-            <div class="vtitle">OpenRouter API Key</div>
-            <div class="vdetail" id="vd-api">جاري التحقق...</div>
-          </div>
-          <div class="vstatus" id="vs-api">—</div>
-        </div>
-
-        <!-- Blog ID Check -->
-        <div class="vrow" id="v-bid">
-          <div class="vicon" id="vi-bid">⏳</div>
-          <div class="vinfo">
-            <div class="vtitle">Blog ID</div>
-            <div class="vdetail" id="vd-bid">جاري التحقق...</div>
-          </div>
-          <div class="vstatus" id="vs-bid">—</div>
-        </div>
-
-        <!-- Access Token Check -->
-        <div class="vrow" id="v-tok">
-          <div class="vicon" id="vi-tok">⏳</div>
-          <div class="vinfo">
-            <div class="vtitle">Access Token (Blogger)</div>
-            <div class="vdetail" id="vd-tok">جاري التحقق...</div>
-          </div>
-          <div class="vstatus" id="vs-tok">—</div>
-        </div>
-
-        <!-- Summary -->
-        <div id="verify-summary" style="display:none;background:var(--ink2);border-radius:8px;padding:12px;font-size:12px;font-family:var(--mono);color:var(--text2);line-height:1.9;margin-top:4px;border:1px solid var(--line2);"></div>
-
-      </div>
-    </div>
+    <button class="btnpub" onclick="saveCfg()" style="margin-bottom:16px;">💾 حفظ الإعدادات</button>
 
     <div class="setcard">
       <div class="sethead"><div class="setdot" style="background:var(--purple);"></div>مميزات الوضع المتقدم</div>
@@ -812,40 +677,35 @@ input[type=datetime-local]{color-scheme:dark;}
     <div class="setcard" style="border-color:rgba(16,185,129,.3);">
       <div class="sethead" style="background:rgba(16,185,129,.08);">
         <div class="setdot" style="background:#10b981;"></div>
-        🔑 OpenRouter API Key — مجاني لكل البلاد ✅
-        <span style="margin-right:auto;background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);padding:2px 8px;border-radius:10px;font-size:9px;">✅ بيشتغل في مصر</span>
+        🔑 OpenRouter API Key — مجاني
+        <span style="margin-right:auto;background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);padding:2px 8px;border-radius:10px;font-size:9px;">✅ كل البلاد</span>
       </div>
       <div class="setbody">
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div class="guide-step">
             <div class="gs-num">1</div>
-            <div class="gs-txt">روح على: <a href="https://openrouter.ai" target="_blank" style="color:#10b981;font-weight:600;">openrouter.ai ↗</a></div>
+            <div class="gs-txt">روح: <a href="https://openrouter.ai" target="_blank" style="color:#10b981;font-weight:600;">openrouter.ai ↗</a></div>
           </div>
           <div class="guide-step">
             <div class="gs-num">2</div>
-            <div class="gs-txt">اضغط <b style="color:#10b981;">"Sign in"</b> ← سجّل بـ Google أو GitHub أو إيميل عادي</div>
+            <div class="gs-txt">اضغط <b style="color:#10b981;">"Sign in"</b> ← سجّل بـ Google أو GitHub</div>
           </div>
           <div class="guide-step">
             <div class="gs-num">3</div>
-            <div class="gs-txt">بعد الدخول روح على: <a href="https://openrouter.ai/keys" target="_blank" style="color:#10b981;">openrouter.ai/keys ↗</a></div>
+            <div class="gs-txt">روح: <a href="https://openrouter.ai/keys" target="_blank" style="color:#10b981;">openrouter.ai/keys ↗</a></div>
           </div>
           <div class="guide-step">
             <div class="gs-num">4</div>
-            <div class="gs-txt">اضغط <b style="color:#10b981;">"Create Key"</b> ← اكتب أي اسم مثلاً <code style="background:var(--ink2);padding:1px 5px;border-radius:3px;">blogmind</code> ← اضغط <b>"Create"</b></div>
+            <div class="gs-txt">اضغط <b style="color:#10b981;">"Create Key"</b> ← اكتب اسم مثلاً <code style="background:var(--ink2);padding:1px 5px;border-radius:3px;">blogmind</code></div>
           </div>
           <div class="guide-step">
             <div class="gs-num">5</div>
-            <div class="gs-txt">انسخ المفتاح فوراً — <b style="color:var(--rose);">مش هيتعرض تاني!</b></div>
-          </div>
-          <div class="guide-step">
-            <div class="gs-num">6</div>
-            <div class="gs-txt">روح <b>⚙️ الإعدادات</b> وحطه في خانة OpenRouter API Key ← اضغط <b>💾 حفظ</b></div>
+            <div class="gs-txt">انسخ المفتاح — <b style="color:var(--rose);">مش هيظهر تاني!</b></div>
           </div>
           <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text2);font-family:var(--mono);">
             المفتاح بيبدأ بـ: <span style="color:#10b981;">sk-or-v1-...</span><br>
-            ✅ مجاني — لا يحتاج كريدت كارد<br>
-            ✅ يشتغل في مصر وكل البلاد العربية<br>
-            ✅ موديلات مجانية متعددة للاختيار
+            ✅ مجاني — بدون كريدت كارد<br>
+            ✅ موديلات متعددة للاختيار
           </div>
         </div>
       </div>
@@ -937,7 +797,7 @@ input[type=datetime-local]{color-scheme:dark;}
             <td style="padding:8px;color:var(--text2);font-family:var(--mono);">مدة الصلاحية</td>
           </tr>
           <tr style="border-bottom:1px solid var(--line);">
-            <td style="padding:8px;color:#10b981;">OpenRouter Key</td>
+            <td style="padding:8px;color:#4285f4;">OpenRouter Key</td>
             <td style="padding:8px;color:var(--text);">openrouter.ai/keys</td>
             <td style="padding:8px;color:var(--green);">دائم ✅</td>
           </tr>
@@ -1003,7 +863,28 @@ window.onload = () => {
   loadCfg();
   renderHistory();
   buildKwGrid();
+  
+  // Logo upload handler
+  const logoFile = document.getElementById('logo-file');
+  if(logoFile){
+    logoFile.addEventListener('change', function(){
+      const file = this.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        logoDataUrl = e.target.result;
+        document.getElementById('logo-img').src = logoDataUrl;
+        document.getElementById('logo-preview').style.display = 'block';
+        toast('✅ تم رفع اللوجو');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 };
+
+// Global state for AI images
+let logoDataUrl = null;
+let aiImages = { first: null, middle: null };
 
 /* ============================
    KEYWORD GRID
@@ -1063,7 +944,14 @@ function showSec(sec, btn) {
 /* ============================
    TOGGLES / MISC
 ============================= */
-function tog(id){ document.getElementById(id).classList.toggle('on'); }
+function tog(id){ 
+  document.getElementById(id).classList.toggle('on');
+  // Show logo section when AI images enabled
+  if(id === 't-aiimg'){
+    const isOn = document.getElementById('t-aiimg').classList.contains('on');
+    document.getElementById('logo-section').style.display = isOn ? 'block' : 'none';
+  }
+}
 function isOn(id){ return document.getElementById(id).classList.contains('on'); }
 function setLang(l,btn){ document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedLang=l; }
 function setTone(t,btn){ document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedTone=t; }
@@ -1086,8 +974,7 @@ function saveCfg(){
   localStorage.setItem('bm_cfg', JSON.stringify({
     ak: document.getElementById('cfg-ak').value,
     bid: document.getElementById('cfg-bid').value,
-    tok: document.getElementById('cfg-tok').value,
-    model: document.getElementById('cfg-model').value
+    tok: document.getElementById('cfg-tok').value
   }));
   toast('✅ تم حفظ الإعدادات');
 }
@@ -1096,7 +983,6 @@ function loadCfg(){
   if(c.ak) document.getElementById('cfg-ak').value=c.ak;
   if(c.bid) document.getElementById('cfg-bid').value=c.bid;
   if(c.tok) document.getElementById('cfg-tok').value=c.tok;
-  if(c.model) document.getElementById('cfg-model').value=c.model;
 }
 function getCfg(){ return JSON.parse(localStorage.getItem('bm_cfg')||'{}'); }
 
@@ -1124,31 +1010,20 @@ async function generate(){
   const prompt = advMode ? buildAdvancedPrompt(topic) : buildStandardPrompt(topic);
 
   try {
-    // ===== OpenRouter API — Smart Fallback System =====
-    // لو موديل اتعطل أو تجاوز الحد، يجرب التاني تلقائياً
+    // ===== OpenRouter API — Smart Fallback =====
     const MODELS = [
       { id: cfg.model || 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3' },
-      { id: 'qwen/qwen-2.5-72b-instruct:free',                     name: 'Qwen 2.5'  },
-      { id: 'deepseek/deepseek-r1:free',                           name: 'DeepSeek R1'},
-      { id: 'google/gemma-3-27b-it:free',                          name: 'Gemma 3'   },
-      { id: 'mistralai/mistral-7b-instruct:free',                  name: 'Mistral 7B' },
+      { id: 'qwen/qwen-2.5-72b-instruct:free', name: 'Qwen 2.5' },
+      { id: 'deepseek/deepseek-r1:free', name: 'DeepSeek R1' },
+      { id: 'google/gemma-3-27b-it:free', name: 'Gemma 3' },
+      { id: 'mistralai/mistral-7b-instruct:free', name: 'Mistral 7B' }
     ];
-    // إزالة التكرار لو الموديل المختار هو نفس الأول في القايمة
-    const uniqueModels = [
-      MODELS[0],
-      ...MODELS.slice(1).filter(m => m.id !== MODELS[0].id)
-    ];
-
+    
     let data = null;
     let usedModel = '';
-    let lastError = '';
-
-    for (let i = 0; i < uniqueModels.length; i++) {
-      const m = uniqueModels[i];
-      // تحديث loader بالموديل الحالي
-      const lmsg = document.querySelector('.lmsg');
-      if(lmsg) lmsg.textContent = `// جاري التجربة مع ${m.name}... (${i+1}/${uniqueModels.length})`;
-
+    
+    for(let i = 0; i < MODELS.length; i++){
+      const m = MODELS[i];
       try {
         const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
@@ -1165,36 +1040,25 @@ async function generate(){
             max_tokens: 8000
           })
         });
-
-        if (res.status === 401) {
-          throw new Error('__FATAL__:API Key خاطئ — تحقق من المفتاح في الإعدادات');
-        }
-
-        if (res.ok) {
+        
+        if(res.status === 401) throw new Error('API Key خاطئ');
+        if(res.ok){
           const d = await res.json();
-          if (d.choices?.[0]?.message?.content) {
+          if(d.choices?.[0]?.message?.content){
             data = d;
             usedModel = m.name;
-            break; // نجح — اخرج من اللوب
+            break;
           }
         }
-        // 429 أو 402 أو غيرها — جرب الموديل التاني
-        lastError = `${m.name}: HTTP ${res.status}`;
-      } catch(innerErr) {
-        if(innerErr.message.startsWith('__FATAL__:')) throw new Error(innerErr.message.replace('__FATAL__:',''));
-        lastError = innerErr.message;
+      } catch(e){
+        if(e.message === 'API Key خاطئ') throw e;
+        continue;
       }
     }
-
-    if (!data) {
-      throw new Error(`كل الموديلات المجانية تجاوزت الحد دلوقتي — حاول بعد ساعة\n(${lastError})`);
-    }
-
-    toast(`✅ كُتب المقال بواسطة ${usedModel}`, false);
-
+    
+    if(!data) throw new Error('كل الموديلات المجانية مشغولة — حاول بعد دقيقة');
+    
     let raw = data.choices[0].message.content;
-
-    // تنظيف markdown code blocks
     raw = raw.replace(/^```html\n?/i,'').replace(/^```\n?/,'').replace(/\n?```$/,'').trim();
 
     let artText = raw;
@@ -1214,16 +1078,6 @@ async function generate(){
     document.getElementById('tab-prev').classList.add('on');
     document.getElementById('tab-raw').classList.remove('on');
     document.getElementById('tab-txt').classList.remove('on');
-    
-    // توليد صور AI تلقائياً مع اللوجو
-    if(isOn('t-aiimg')){
-      document.getElementById('imgcard').classList.add('shown');
-      await autoGenerateImagesWithLogo(topic);
-    } else if(isOn('t-img')){
-      document.getElementById('imgcard').classList.add('shown'); 
-      loadImages(topic);
-    }
-    
     renderArticle(artText);
     updateStats(artText);
 
@@ -1235,6 +1089,15 @@ async function generate(){
     document.getElementById('mf-seo').style.display = isOn('t-seo') ? 'inline-flex' : 'none';
     document.getElementById('mf-img').style.display = (isOn('t-img')||isOn('t-aiimg')) ? 'inline-flex' : 'none';
 
+    // Load images or generate AI images
+    if(isOn('t-aiimg')){
+      await generateAIImagesAuto(topic);
+      renderArticle(artText); // Re-render with AI images
+    } else if(isOn('t-img')){
+      document.getElementById('imgcard').classList.add('shown');
+      loadImages(topic);
+    }
+    
     toast(advMode ? '⚡ تم توليد مقال AdSense احترافي!' : '✅ تم توليد المقال!');
 
   } catch(err) {
@@ -1375,7 +1238,7 @@ function showLoader(isAdv){
   document.getElementById('artview').innerHTML = `
     <div class="loader">
       <div class="lring ${color}"></div>
-      <div class="lmsg">${isAdv ? '⚡ توليد مقال AdSense احترافي...' : '// OpenRouter يكتب مقالك مجاناً...'}</div>
+      <div class="lmsg">${isAdv ? '⚡ توليد مقال AdSense احترافي...' : '// Gemini يكتب مقالك مجاناً...'}</div>
       <div class="lprog">
         <div class="lpstep done"><div class="dot"></div><span style="color:var(--text3);">تحليل الموضوع</span></div>
         <div class="lpstep active"><div class="dot"></div><span style="color:var(--text2);">${isAdv ? 'توزيع الكلمات المفتاحية' : 'كتابة المحتوى'}</span></div>
@@ -1402,42 +1265,30 @@ function renderArticle(text){
   if(text.trim().startsWith('<')){
     let rendered = text;
     
-    // إدراج الصور التلقائية لو موجودة
-    if(generatedImages.first && generatedImages.middle){
-      // الصورة الأولى بعد H1 مباشرة
+    // Inject AI images if generated
+    if(aiImages.first && aiImages.middle){
+      // First image after H1
       rendered = rendered.replace(
         /<\/h1>/i,
-        `</h1><img src="${generatedImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.1);" loading="lazy">`
+        `</h1><img src="${aiImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`
       );
       
-      // الصورة الثانية في منتصف المقال — بعد نص H2 تقريباً
-      const h2Match = rendered.match(/<\/h2>/gi);
-      if(h2Match && h2Match.length >= 2){
-        // بعد ثاني H2
+      // Second image in middle — after 2nd H2
+      const h2Matches = rendered.match(/<\/h2>/gi);
+      if(h2Matches && h2Matches.length >= 2){
         let count = 0;
         rendered = rendered.replace(/<\/h2>/gi, (match)=>{
           count++;
           if(count === 2){
-            return `</h2><img src="${generatedImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.1);" loading="lazy">`;
+            return `</h2><img src="${aiImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`;
           }
           return match;
         });
-      } else {
-        // لو مفيش H2 كفاية، حطها قبل آخر فقرة
-        const lastP = rendered.lastIndexOf('</p>');
-        if(lastP > 0){
-          rendered = rendered.slice(0,lastP) + 
-            `<img src="${generatedImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.1);" loading="lazy">` +
-            rendered.slice(lastP);
-        }
       }
-    }
-    // لو صورة Unsplash مختارة وصور AI مش موجودة
-    else if(selectedImg && !generatedImages.first){
-      rendered = rendered.replace(
-        /<\/h1>/i,
-        `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`
-      );
+    } 
+    // Fallback to Unsplash if selected
+    else if(selectedImg && !aiImages.first){
+      rendered = rendered.replace(/<\/h1>/i, `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
     }
     
     av.innerHTML = rendered;
@@ -1492,142 +1343,7 @@ function updateStats(text){
 }
 
 /* ============================
-   AUTO AI IMAGES + LOGO — تلقائي
-============================= */
-let generatedImages = { first: null, middle: null };
-
-async function autoGenerateImagesWithLogo(topic){
-  if(!logoDataUrl){
-    toast('⚠️ ارفع لوجو من الشريط الجانبي أولاً', true);
-    return;
-  }
-
-  toast('🎨 جاري توليد صورتين بالـ AI + إضافة اللوجو...');
-  
-  const seed1 = Math.floor(Math.random()*99999);
-  const seed2 = Math.floor(Math.random()*99999);
-  const p1 = encodeURIComponent(`${topic}, professional blog header, modern flat design, vibrant colors, 4k`);
-  const p2 = encodeURIComponent(`${topic}, digital illustration, clean editorial style, high quality photography`);
-  const url1 = `https://image.pollinations.ai/prompt/${p1}?width=1200&height=630&seed=${seed1}&nologo=true`;
-  const url2 = `https://image.pollinations.ai/prompt/${p2}?width=1200&height=630&seed=${seed2}&nologo=true`;
-
-  try {
-    // توليد الصورة الأولى مع اللوجو
-    generatedImages.first = await addLogoToImageURL(url1);
-    // توليد الصورة الثانية مع اللوجو
-    generatedImages.middle = await addLogoToImageURL(url2);
-    
-    toast('✅ تم توليد صورتين + إضافة اللوجو — تم إدراجهم في المقال');
-    
-    // إعادة رسم المقال بالصور الجديدة
-    if(currentArticle) renderArticle(currentArticle);
-    
-  } catch(e){
-    toast('❌ فشل توليد الصور — تحقق من الإنترنت', true);
-  }
-}
-
-async function addLogoToImageURL(imgURL){
-  return new Promise((resolve, reject)=>{
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    const mainImg = new Image();
-    mainImg.crossOrigin = 'anonymous';
-    mainImg.onload = ()=>{
-      canvas.width = 1200;
-      canvas.height = 630;
-      ctx.drawImage(mainImg, 0, 0, canvas.width, canvas.height);
-      
-      const logoImg = new Image();
-      logoImg.onload = ()=>{
-        // لوجو في أعلى يمين — 20% من عرض الصورة
-        const logoW = canvas.width * 0.20;
-        const logoH = (logoImg.naturalHeight / logoImg.naturalWidth) * logoW;
-        const pad = canvas.width * 0.025;
-        const x = canvas.width - logoW - pad;
-        const y = pad;
-        
-        ctx.globalAlpha = 0.88;
-        ctx.drawImage(logoImg, x, y, logoW, logoH);
-        ctx.globalAlpha = 1;
-        
-        // تحويل لـ WebP
-        const webpDataURL = canvas.toDataURL('image/webp', 0.92);
-        resolve(webpDataURL);
-      };
-      logoImg.onerror = ()=> reject('فشل تحميل اللوجو');
-      logoImg.src = logoDataUrl;
-    };
-    mainImg.onerror = ()=> reject('فشل تحميل الصورة');
-    mainImg.src = imgURL;
-  });
-}
-
-
-let logoDataUrl = null;
-document.addEventListener('DOMContentLoaded', ()=>{
-  const lf = document.getElementById('logo-file');
-  if(lf) lf.addEventListener('change', function(){
-    const file = this.files[0]; if(!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-      logoDataUrl = e.target.result;
-      document.getElementById('logo-img').src = logoDataUrl;
-      document.getElementById('logo-preview').style.display = 'block';
-      toast('✅ تم رفع اللوجو');
-    };
-    reader.readAsDataURL(file);
-  });
-});
-
-/* ============================
-   IMAGE TABS
-============================= */
-function switchImgTab(tab){
-  document.getElementById('img-unsplash-sec').style.display = tab==='unsplash'?'block':'none';
-  document.getElementById('img-ai-sec').style.display       = tab==='ai'      ?'block':'none';
-  document.getElementById('img-tab-unsplash').classList.toggle('on', tab==='unsplash');
-  document.getElementById('img-tab-ai').classList.toggle('on', tab==='ai');
-}
-
-/* ============================
-   AI IMAGE GENERATION — Pollinations مجاني
-============================= */
-async function generateAIImages(){
-  const topic = document.getElementById('topic').value.trim() || 'technology digital';
-  const btn = document.getElementById('gen-ai-imgs-btn');
-  const grid = document.getElementById('ai-imggrid');
-  btn.disabled = true; btn.innerHTML = '⏳ جاري التوليد...';
-  grid.innerHTML = `<div style="color:var(--text3);font-size:11px;grid-column:1/-1;text-align:center;padding:24px;font-family:var(--mono);">// Pollinations AI يرسم صورتين — انتظر 10-20 ثانية...</div>`;
-
-  const s1 = Math.floor(Math.random()*99999);
-  const s2 = Math.floor(Math.random()*99999);
-  const p1 = encodeURIComponent(`${topic}, professional blog cover, modern flat design, vibrant colors, 4k quality`);
-  const p2 = encodeURIComponent(`${topic}, digital illustration, clean minimalist editorial style, high quality photography`);
-  const url1 = `https://image.pollinations.ai/prompt/${p1}?width=1200&height=630&seed=${s1}&nologo=true`;
-  const url2 = `https://image.pollinations.ai/prompt/${p2}?width=1200&height=630&seed=${s2}&nologo=true`;
-
-  grid.innerHTML = [url1,url2].map((u,i)=>`
-    <div class="imgopt" id="aio-${i}" onclick="pickAIImg('${u}',${i})"
-      style="aspect-ratio:16/9;opacity:.4;transition:opacity .8s;">
-      <img src="${u}" alt="AI ${i+1}" style="width:100%;height:100%;object-fit:cover;"
-        onload="document.getElementById('aio-${i}').style.opacity=1"
-        onerror="document.getElementById('aio-${i}').innerHTML='<div style=\\'padding:14px;color:var(--rose);font-size:10px;text-align:center;\\'>❌ فشل التوليد</div>'">
-      <div class="imgchk">✓ مختار</div>
-    </div>`).join('');
-
-  btn.disabled=false; btn.innerHTML='🔄 توليد صورتين جديدتين';
-}
-
-function pickAIImg(url,idx){
-  document.querySelectorAll('#ai-imggrid .imgopt').forEach(e=>e.classList.remove('chosen'));
-  const el=document.getElementById('aio-'+idx); if(el) el.classList.add('chosen');
-  applyLogoToImage(url);
-}
-
-/* ============================
-   IMAGES — Unsplash
+   IMAGES
 ============================= */
 async function loadImages(topic){
   const g = document.getElementById('imggrid');
@@ -1643,86 +1359,71 @@ async function loadImages(topic){
 
 function pickImg(url, idx){
   selectedImg = url;
-  document.querySelectorAll('#imggrid .imgopt').forEach(el=>el.classList.remove('chosen'));
-  const el=document.getElementById('io-'+idx); if(el) el.classList.add('chosen');
-  applyLogoToImage(url);
+  document.querySelectorAll('.imgopt').forEach(el=>el.classList.remove('chosen'));
+  document.getElementById('io-'+idx).classList.add('chosen');
   if(currentArticle) renderArticle(currentArticle);
+  toast('✅ تم اختيار الصورة');
 }
 
 /* ============================
-   CANVAS — لوجو فوق الصورة
+   AI IMAGE GENERATION — Automatic
 ============================= */
-function applyLogoToImage(imgUrl){
-  const canvas = document.getElementById('img-canvas');
-  const ctx = canvas.getContext('2d');
-  document.getElementById('img-result-sec').style.display='block';
-  setTimeout(()=>canvas.scrollIntoView({behavior:'smooth',block:'nearest'}),200);
+async function generateAIImagesAuto(topic){
+  if(!logoDataUrl){
+    toast('⚠️ ارفع لوجو من الشريط الجانبي', true);
+    return;
+  }
 
-  const mainImg = new Image();
-  mainImg.crossOrigin='anonymous';
-  mainImg.onload=()=>{
-    canvas.width  = mainImg.naturalWidth  || 1200;
-    canvas.height = mainImg.naturalHeight || 630;
-    ctx.drawImage(mainImg,0,0,canvas.width,canvas.height);
+  toast('🎨 جاري توليد صورتين AI + إضافة اللوجو...');
+  
+  const seed1 = Math.floor(Math.random()*99999);
+  const seed2 = Math.floor(Math.random()*99999);
+  const p1 = encodeURIComponent(`${topic}, professional blog header, modern design, vibrant`);
+  const p2 = encodeURIComponent(`${topic}, digital illustration, editorial style, quality`);
+  const url1 = `https://image.pollinations.ai/prompt/${p1}?width=1200&height=630&seed=${seed1}&nologo=true`;
+  const url2 = `https://image.pollinations.ai/prompt/${p2}?width=1200&height=630&seed=${seed2}&nologo=true`;
 
-    if(!logoDataUrl){
-      selectedImg = canvas.toDataURL('image/webp',0.92);
-      toast('⚠️ ارفع لوجو من الشريط الجانبي لإضافته');
-      return;
-    }
-    const logoImg = new Image();
-    logoImg.onload=()=>{
-      const pct = parseInt(document.getElementById('logo-size').value)/100;
-      const lw  = canvas.width*pct;
-      const lh  = (logoImg.naturalHeight/logoImg.naturalWidth)*lw;
-      const pos = document.getElementById('logo-pos').value;
-      const pad = Math.round(canvas.width*0.025);
-      let x,y;
-      if(pos==='bottom-right'){x=canvas.width-lw-pad; y=canvas.height-lh-pad;}
-      else if(pos==='bottom-left'){x=pad; y=canvas.height-lh-pad;}
-      else if(pos==='top-right'){x=canvas.width-lw-pad; y=pad;}
-      else if(pos==='top-left'){x=pad; y=pad;}
-      else{x=(canvas.width-lw)/2; y=(canvas.height-lh)/2;}
-      ctx.globalAlpha=0.88;
-      ctx.drawImage(logoImg,x,y,lw,lh);
-      ctx.globalAlpha=1;
-      selectedImg = canvas.toDataURL('image/webp',0.92);
-      toast('✅ اللوجو اتضاف على الصورة');
+  try {
+    aiImages.first = await processImageWithLogo(url1);
+    aiImages.middle = await processImageWithLogo(url2);
+    toast('✅ تم توليد الصورتين + اللوجو');
+  } catch(e){
+    toast('❌ فشل توليد الصور', true);
+    console.error(e);
+  }
+}
+
+async function processImageWithLogo(imgURL){
+  return new Promise((resolve, reject)=>{
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    const mainImg = new Image();
+    mainImg.crossOrigin = 'anonymous';
+    mainImg.onload = ()=>{
+      canvas.width = 1200;
+      canvas.height = 630;
+      ctx.drawImage(mainImg, 0, 0, 1200, 630);
+      
+      const logoImg = new Image();
+      logoImg.onload = ()=>{
+        // Logo at top-right — 20% width
+        const logoW = 1200 * 0.20;
+        const logoH = (logoImg.naturalHeight / logoImg.naturalWidth) * logoW;
+        const x = 1200 - logoW - 30;
+        const y = 30;
+        ctx.globalAlpha = 0.88;
+        ctx.drawImage(logoImg, x, y, logoW, logoH);
+        ctx.globalAlpha = 1;
+        resolve(canvas.toDataURL('image/webp', 0.92));
+      };
+      logoImg.onerror = ()=> reject('Logo load failed');
+      logoImg.src = logoDataUrl;
     };
-    logoImg.src=logoDataUrl;
-  };
-  mainImg.onerror=()=>toast('❌ فشل تحميل الصورة',true);
-  mainImg.src=imgUrl;
+    mainImg.onerror = ()=> reject('Image load failed');
+    mainImg.src = imgURL;
+  });
 }
-
-/* ============================
-   DOWNLOAD WebP / PNG
-============================= */
-function downloadWebP(){
-  const c=document.getElementById('img-canvas');
-  if(!c.width){toast('❌ اختار صورة أولاً',true);return;}
-  const a=document.createElement('a');
-  a.download=`blogmind-${Date.now()}.webp`;
-  a.href=c.toDataURL('image/webp',0.92); a.click();
-  toast('✅ تم تحميل WebP');
-}
-function downloadPNG(){
-  const c=document.getElementById('img-canvas');
-  if(!c.width){toast('❌ اختار صورة أولاً',true);return;}
-  const a=document.createElement('a');
-  a.download=`blogmind-${Date.now()}.png`;
-  a.href=c.toDataURL('image/png'); a.click();
-  toast('✅ تم تحميل PNG');
-}
-function useInArticle(){
-  const c=document.getElementById('img-canvas');
-  if(!c.width){toast('❌ اختار صورة أولاً',true);return;}
-  selectedImg=c.toDataURL('image/webp',0.92);
-  if(currentArticle) renderArticle(currentArticle);
-  toast('✅ الصورة أُضيفت للمقال');
-}
-
-
 
 /* ============================
    PUBLISH
@@ -1771,7 +1472,7 @@ function buildFinalHTML(){
   if(!currentArticle) return '';
   let content = currentArticle;
   
-  // تحويل markdown لو مش HTML
+  // Convert markdown if needed
   if(!content.trim().startsWith('<')){
     content = content
       .replace(/^# (.+)$/gm,'<h1>$1</h1>')
@@ -1784,28 +1485,29 @@ function buildFinalHTML(){
       .replace(/^(?!<[hHuUlLoObBpP]).+$/gm,m=>m.trim()?`<p>${m}</p>`:'');
   }
   
-  // إدراج الصور التلقائية في مكانين
-  if(generatedImages.first && generatedImages.middle){
-    // الصورة الأولى بعد H1
+  // Inject AI images if available
+  if(aiImages.first && aiImages.middle){
+    // First image after H1
     content = content.replace(
       /<\/h1>/i,
-      `</h1><img src="${generatedImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.08);" loading="lazy">`
+      `</h1><img src="${aiImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`
     );
     
-    // الصورة الثانية في المنتصف
-    const h2Match = content.match(/<\/h2>/gi);
-    if(h2Match && h2Match.length >= 2){
+    // Second image in middle — after 2nd H2
+    const h2Matches = content.match(/<\/h2>/gi);
+    if(h2Matches && h2Matches.length >= 2){
       let count = 0;
       content = content.replace(/<\/h2>/gi, (match)=>{
         count++;
         if(count === 2){
-          return `</h2><img src="${generatedImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;box-shadow:0 4px 12px rgba(0,0,0,.08);" loading="lazy">`;
+          return `</h2><img src="${aiImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`;
         }
         return match;
       });
     }
-  } else if(selectedImg && !generatedImages.first){
-    // صورة Unsplash فقط
+  } 
+  // Fallback to Unsplash
+  else if(selectedImg && !aiImages.first){
     content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
   }
   
@@ -1814,11 +1516,6 @@ p{margin-bottom:15px;font-size:16px;color:#222;}
 h1{color:#1565c0;font-size:28px;margin-bottom:18px;}
 h2{font-size:22px;margin:26px 0 12px;}
 h3{font-size:18px;margin:18px 0 8px;}
-ul{margin:10px 0 14px 22px;} li{margin-bottom:6px;font-size:16px;}
-strong{color:#bf360c;} blockquote{border-right:4px solid #1565c0;padding:10px 16px;background:#e3f2fd;margin:16px 0;border-radius:0 8px 8px 0;}
-img{width:100%;border-radius:10px;margin:14px 0;}</style>`;
-  return style + content;
-}
 ul{margin:10px 0 14px 22px;} li{margin-bottom:6px;font-size:16px;}
 strong{color:#bf360c;} blockquote{border-right:4px solid #1565c0;padding:10px 16px;background:#e3f2fd;margin:16px 0;border-radius:0 8px 8px 0;}
 img{width:100%;border-radius:10px;margin:14px 0;}</style>`;
@@ -1895,185 +1592,8 @@ function closeModal(){ document.getElementById('modal').classList.remove('open')
 document.getElementById('modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
 
 /* ============================
-   VERIFY ALL KEYS — نسخة مصححة
+   TOAST / UTILS
 ============================= */
-function setVRow(key, state, icon, detail, status) {
-  const row = document.getElementById('v-'+key);
-  const iEl = document.getElementById('vi-'+key);
-  const dEl = document.getElementById('vd-'+key);
-  const sEl = document.getElementById('vs-'+key);
-  if(!row) return;
-  row.className = 'vrow ' + state;
-  iEl.textContent = icon;
-  dEl.textContent = detail;
-  sEl.textContent = status;
-  sEl.style.color = state==='ok' ? 'var(--green)' : state==='fail' ? 'var(--rose)' : 'var(--amber)';
-}
-
-async function verifyAll() {
-  const cfg = getCfg();
-  const btn = document.getElementById('verify-btn');
-  btn.disabled = true;
-  btn.innerHTML = '⏳ جاري التحقق...';
-
-  const card = document.getElementById('verify-card');
-  card.style.display = 'block';
-  card.scrollIntoView({ behavior:'smooth', block:'nearest' });
-
-  // إعادة ضبط كل الصفوف
-  ['api','bid','tok'].forEach(k => setVRow(k,'checking','⏳','جاري التحقق الفعلي...','...'));
-  document.getElementById('verify-summary').style.display = 'none';
-  document.getElementById('verify-overall').textContent = '';
-
-  let okApi = false, okBid = false, okTok = false;
-
-  // ══════════════════════════════
-  // 1) OpenRouter API Key
-  //    بيبعت request حقيقي ويشوف الرد
-  // ══════════════════════════════
-  if (!cfg.ak || cfg.ak.trim() === '') {
-    setVRow('api','fail','❌','الخانة فارغة — أدخل OpenRouter API Key','فارغ ❌');
-  } else {
-    try {
-      const r = await fetch('https://openrouter.ai/api/v1/auth/key', {
-        headers: { 'Authorization': 'Bearer ' + cfg.ak.trim() }
-      });
-      if (r.ok) {
-        const d = await r.json();
-        const label = d.data?.label || 'بدون اسم';
-        const usage = d.data?.usage !== undefined ? `الاستخدام: $${Number(d.data.usage).toFixed(4)}` : '';
-        setVRow('api','ok','✅', `المفتاح صحيح ✅ — الاسم: "${label}" ${usage}`, 'شغّال ✅');
-        okApi = true;
-      } else if (r.status === 401) {
-        setVRow('api','fail','❌','المفتاح خاطئ أو محذوف — اعمل مفتاح جديد من openrouter.ai/keys','خاطئ ❌');
-      } else {
-        setVRow('api','fail','⚠️','خطأ غير متوقع: HTTP ' + r.status,'خطأ ⚠️');
-      }
-    } catch(e) {
-      setVRow('api','fail','❌','فشل الاتصال بـ OpenRouter — تحقق من الإنترنت','فشل الاتصال ❌');
-    }
-  }
-
-  // ══════════════════════════════
-  // 2) Blog ID + Access Token معاً
-  //    بيبعت request حقيقي لـ Blogger API
-  //    ده الفحص الوحيد الصح للاتنين
-  // ══════════════════════════════
-  const bid = (cfg.bid || '').trim();
-  const tok = (cfg.tok || '').trim();
-
-  // فحص Blog ID — شكل فقط أولاً
-  if (!bid) {
-    setVRow('bid','fail','❌','الخانة فارغة — أدخل Blog ID','فارغ ❌');
-  } else if (!/^\d+$/.test(bid)) {
-    setVRow('bid','fail','❌','Blog ID لازم يكون أرقام فقط — مثال: 1234567890123456789','خاطئ ❌');
-  } else {
-    setVRow('bid','checking','⏳','الشكل صح — جاري التحقق الفعلي من الـ API...','...');
-    okBid = true; // مؤقت — هيتأكد بعدين
-  }
-
-  // فحص Access Token — شكل فقط أولاً
-  if (!tok) {
-    setVRow('tok','fail','❌','الخانة فارغة — أدخل Access Token','فارغ ❌');
-  } else if (!tok.startsWith('ya29.')) {
-    setVRow('tok','fail','❌','التوكن لازم يبدأ بـ ya29. — اجيبه من OAuth Playground','خاطئ الشكل ❌');
-  } else {
-    setVRow('tok','checking','⏳','الشكل صح — جاري التحقق الفعلي من الـ API...','...');
-  }
-
-  // لو الاتنين شكلهم صح — نعمل فحص حقيقي واحد بيأكد الاتنين
-  if (okBid && tok.startsWith('ya29.')) {
-    try {
-      const r = await fetch(
-        `https://www.googleapis.com/blogger/v3/blogs/${bid}`,
-        { headers: { 'Authorization': 'Bearer ' + tok } }
-      );
-
-      if (r.ok) {
-        const d = await r.json();
-        const blogName = d.name || 'غير معروف';
-        const blogUrl  = d.url  || '';
-        // الاتنين صح
-        setVRow('bid','ok','✅', `Blog ID صحيح ✅ — المدونة: "${blogName}"`, 'صحيح ✅');
-        setVRow('tok','ok','✅', `التوكن شغّال ✅ — تم التحقق من المدونة: ${blogUrl}`, 'شغّال ✅');
-        okBid = true;
-        okTok = true;
-
-      } else if (r.status === 401) {
-        // التوكن منتهي أو غلط — Blog ID ممكن يكون صح
-        setVRow('bid','ok','✅', `شكل Blog ID صحيح — لكن التوكن منتهي فمش قادر نأكد`, 'يبدو صح ⚠️');
-        setVRow('tok','fail','❌',
-          'التوكن منتهي الصلاحية (HTTP 401) — روح OAuth Playground واجيب توكن جديد',
-          'منتهي ❌');
-        okBid = false; // مش مأكد
-        okTok = false;
-
-      } else if (r.status === 403) {
-        setVRow('bid','ok','✅', 'Blog ID يبدو صحيح', 'يبدو صح ✅');
-        setVRow('tok','fail','❌',
-          'التوكن مش عنده صلاحية Blogger — في OAuth Playground تأكد إنك اخترت: https://www.googleapis.com/auth/blogger',
-          'بدون صلاحية ❌');
-        okBid = true;
-        okTok = false;
-
-      } else if (r.status === 404) {
-        setVRow('bid','fail','❌',
-          'Blog ID مش موجود في بلوجر (HTTP 404) — تحقق من الأرقام مرة تانية',
-          'غير موجود ❌');
-        setVRow('tok','checking','⚠️',
-          'التوكن ممكن يكون صح — بس مش قادر نتحقق لأن Blog ID غلط',
-          'غير مأكد ⚠️');
-        okBid = false;
-        okTok = false;
-
-      } else {
-        const errTxt = await r.text().catch(()=>'');
-        setVRow('bid','fail','⚠️', `خطأ HTTP ${r.status}`, 'خطأ ⚠️');
-        setVRow('tok','fail','⚠️', `خطأ HTTP ${r.status} — ${errTxt.slice(0,80)}`, 'خطأ ⚠️');
-        okBid = false;
-        okTok = false;
-      }
-
-    } catch(e) {
-      setVRow('bid','fail','❌','فشل الاتصال بـ Blogger API — تحقق من الإنترنت','فشل ❌');
-      setVRow('tok','fail','❌','فشل الاتصال بـ Blogger API — تحقق من الإنترنت','فشل ❌');
-      okBid = false;
-      okTok = false;
-    }
-  }
-
-  // ══════════════════════════════
-  // ملخص النتيجة
-  // ══════════════════════════════
-  const allOk = okApi && okBid && okTok;
-  const overall = document.getElementById('verify-overall');
-
-  if (allOk) {
-    overall.textContent = '✅ كل المفاتيح شغّالة';
-    overall.style.cssText = 'background:rgba(0,230,118,.15);color:#00e676;border:1px solid rgba(0,230,118,.3);margin-right:auto;padding:2px 10px;border-radius:10px;font-size:10px;font-family:var(--mono);';
-  } else {
-    overall.textContent = '❌ في مشكلة — شوف التفاصيل';
-    overall.style.cssText = 'background:rgba(255,64,129,.15);color:#ff4081;border:1px solid rgba(255,64,129,.3);margin-right:auto;padding:2px 10px;border-radius:10px;font-size:10px;font-family:var(--mono);';
-  }
-
-  const sumEl = document.getElementById('verify-summary');
-  let lines = [];
-  if (!okApi) lines.push('🔑 اجيب OpenRouter API Key جديد من: <b>openrouter.ai/keys</b>');
-  if (!okBid) lines.push('📰 تحقق من Blog ID — الأرقام الموجودة في رابط بلوجر');
-  if (!okTok) lines.push('🔐 اجيب Access Token جديد من: <b>developers.google.com/oauthplayground</b> — ينتهي كل ساعة');
-  if (allOk)  lines.push('🎉 كل حاجة تمام! اضغط كتابة وابدأ التوليد الآن');
-
-  sumEl.innerHTML = lines.join('<br>');
-  sumEl.style.display = 'block';
-
-  btn.disabled = false;
-  btn.innerHTML = '🔍 التحقق من المفاتيح';
-
-  if (allOk) toast('✅ كل المفاتيح شغّالة فعلاً — ابدأ!');
-  else toast('❌ في مشكلة — شوف نتيجة التحقق', true);
-}
-
-
 function toast(msg, isErr=false){
   const t=document.getElementById('toast');
   t.textContent=msg;
